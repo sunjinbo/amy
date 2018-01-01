@@ -1,1 +1,1 @@
-# amy
+# this Android app help for my daugter to studying English.
