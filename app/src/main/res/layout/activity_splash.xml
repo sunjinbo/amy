@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.sun.amy.activity.SplashActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            tools:text="V1.0.0.26"
+            android:id="@+id/tv_version"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="@string/copyright"
+            android:textSize="10sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</FrameLayout>
