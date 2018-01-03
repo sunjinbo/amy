@@ -49,6 +49,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, ReviewActivity.class);
+                intent.putExtra("unit_name", itemData.title);
+                intent.putExtra("unit_directory", itemData.path);
                 mActivity.startActivity(intent);
             }
         });

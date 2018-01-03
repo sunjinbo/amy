@@ -9,6 +9,7 @@
     tools:context="com.sun.amy.activity.LessonsActivity">
 
     <TextView
+        android:id="@+id/tv_title"
         tools:text="@string/okay_english"
         android:text="@string/okay_english"
         android:textSize="24sp"

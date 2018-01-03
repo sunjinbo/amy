@@ -22,7 +22,7 @@ public class SplashActivity extends Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mHandler.sendEmptyMessageDelayed(0, 1500);
+                mHandler.sendEmptyMessageDelayed(0, 2000);
             }
         }).start();
     }

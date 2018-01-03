@@ -16,11 +16,17 @@ public class MainActivity extends Activity {
     }
 
     public void onOkEnglishClick(View view) {
-        startActivity(new Intent(MainActivity.this, LessonsActivity.class));
+        Intent intent = new Intent(MainActivity.this, LessonsActivity.class);
+        intent.putExtra("lesson_name", getString(R.string.okay_english));
+        intent.putExtra("lesson_directory", "ok");
+        startActivity(intent);
     }
 
     public void onUmiEnglishClick(View view) {
-        startActivity(new Intent(MainActivity.this, LessonsActivity.class));
+        Intent intent = new Intent(MainActivity.this, LessonsActivity.class);
+        intent.putExtra("lesson_name", getString(R.string.umi_english));
+        intent.putExtra("lesson_directory", "umi");
+        startActivity(intent);
     }
 
     public void onDictClick(View view) {

@@ -3,6 +3,7 @@
     <string name="copyright">©風中の語者.</string>
     <string name="okay_english">ok英语</string>
     <string name="umi_english">优咪瑞可</string>
+    <string name="key_words">Key words</string>
     <string name="dict">生词本</string>
     <string name="score">成绩单</string>
     <string name="ok">确定</string>
@@ -10,4 +11,5 @@
     <string name="nick_name_is_empty">昵称不能为空！</string>
     <string name="forget">忘记</string>
     <string name="know">认识</string>
+    <string name="do_homework">做作业</string>
 </resources>
