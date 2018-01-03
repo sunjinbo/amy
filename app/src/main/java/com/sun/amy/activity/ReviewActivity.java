@@ -3,7 +3,6 @@ package com.sun.amy.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.MediaController;
@@ -12,7 +11,8 @@ import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.UnitAdapter;
-import com.sun.amy.data.LessonBean;
+import com.sun.amy.data.UnitBean;
+import com.sun.amy.data.UnitWrapper;
 import com.sun.amy.data.SongBean;
 import com.sun.amy.data.StoryBean;
 import com.sun.amy.data.StudyType;
@@ -28,27 +28,26 @@ public class ReviewActivity extends Activity {
 
     private RecyclerView mRecyclerView;
     private UnitAdapter mAdapter;
-    private LessonBean mLessonBean;
+    private UnitBean mUnitBean;
     private VideoView mVideoView;
-
+    private String mUnitName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
 
-        String unitName = "";
         String unitDirectory = "";
         Intent intent = getIntent();
         if (intent.hasExtra("unit_name")) {
-            unitName = intent.getStringExtra("unit_name");
+            mUnitName = intent.getStringExtra("unit_name");
         }
 
         if (intent.hasExtra("unit_directory")) {
             unitDirectory = intent.getStringExtra("unit_directory");
         }
 
-        initView(unitName);
+        initView(mUnitName);
         initData(unitDirectory);
     }
 
@@ -68,29 +67,29 @@ public class ReviewActivity extends Activity {
     private void initData(String unitDirectory) {
         List<UnitItemData> list = new ArrayList<>();
 
-        mLessonBean = LessonBean.parseConfig(unitDirectory);
+        mUnitBean = UnitBean.parseConfig(unitDirectory);
 
-        if (mLessonBean.words.size() > 0) {
+        if (mUnitBean.words.size() > 0) {
             list.add(new UnitItemData(getString(R.string.key_words), StudyType.Word));
         }
 
         File unit = new File(unitDirectory);
 
-        for (SongBean songBean : mLessonBean.songs) {
+        for (SongBean songBean : mUnitBean.songs) {
             File song = new File(unit, songBean.file);
             if (song.exists()) {
                 list.add(new UnitItemData(songBean.name, StudyType.Song, song.getPath()));
             }
         }
 
-        for (StoryBean storyBean : mLessonBean.storys) {
+        for (StoryBean storyBean : mUnitBean.storys) {
             File story = new File(unit, storyBean.file);
             if (story.exists()) {
                 list.add(new UnitItemData(storyBean.name, StudyType.Story, story.getPath()));
             }
         }
 
-        mAdapter = new UnitAdapter(this, list, mVideoView);
+        mAdapter = new UnitAdapter(this, mVideoView, list, new UnitWrapper(mUnitName, mUnitBean, unit));
         mRecyclerView.setAdapter(mAdapter);
     }
 }

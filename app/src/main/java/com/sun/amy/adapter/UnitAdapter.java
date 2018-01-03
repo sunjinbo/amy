@@ -13,8 +13,10 @@ import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.activity.DictActivity;
+import com.sun.amy.data.UnitWrapper;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
+import com.sun.amy.data.WordWrapper;
 
 import java.util.List;
 
@@ -25,11 +27,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
     private Activity mActivity;
     private List<UnitItemData> mData;
     private VideoView mVideoView;
+    private UnitWrapper mWrapper;
 
-    public UnitAdapter(Activity activity, List<UnitItemData> data, VideoView videoView) {
+    public UnitAdapter(Activity activity, VideoView videoView, List<UnitItemData> data, UnitWrapper wrapper) {
         mActivity = activity;
         mData = data;
         mVideoView = videoView;
+        mWrapper = wrapper;
     }
 
     public void updateData(List<UnitItemData> data) {
@@ -55,6 +59,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
             public void onClick(View view) {
                 if (itemData.type == StudyType.Word) {
                     Intent intent = new Intent(mActivity, DictActivity.class);
+                    intent.putExtra("unit_name", mWrapper.unitName);
+                    intent.putExtra("unit_words", new WordWrapper(mWrapper.unit.getPath(), mWrapper.unitBean.words));
                     mActivity.startActivity(intent);
                 } else {
                     Uri uri = Uri.parse(itemData.path);

@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * LessonBean.
+ * UnitBean.
  */
-public class LessonBean {
+public class UnitBean implements Serializable {
     public List<WordBean> words = new ArrayList<>();
     public List<SongBean> songs = new ArrayList<>();
     public List<StoryBean> storys = new ArrayList<>();
@@ -23,8 +24,8 @@ public class LessonBean {
     public String type;
     public String level;
 
-    public static LessonBean parseConfig(String path) {
-        LessonBean bean = null;
+    public static UnitBean parseConfig(String path) {
+        UnitBean bean = null;
 
         String configName = path + File.separator + "config.ini";
 
@@ -49,7 +50,7 @@ public class LessonBean {
 
         // step 2: parse json string to AdsBean object.
         try {
-            bean = new LessonBean();
+            bean = new UnitBean();
             JSONObject rootObj = new JSONObject(jsonData);
 
             if (rootObj.has("name")) {
