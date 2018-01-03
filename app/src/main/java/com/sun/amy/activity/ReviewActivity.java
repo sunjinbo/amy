@@ -3,9 +3,12 @@ package com.sun.amy.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.UnitAdapter;
@@ -15,15 +18,19 @@ import com.sun.amy.data.StoryBean;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 
 public class ReviewActivity extends Activity {
+
     private RecyclerView mRecyclerView;
     private UnitAdapter mAdapter;
     private LessonBean mLessonBean;
+    private VideoView mVideoView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,9 @@ public class ReviewActivity extends Activity {
 
         TextView titleTextView = findViewById(R.id.tv_title);
         titleTextView.setText(unitName);
+
+        mVideoView = findViewById(R.id.video_view);
+        mVideoView.setMediaController(new MediaController(this));
     }
 
     private void initData(String unitDirectory) {
@@ -64,15 +74,23 @@ public class ReviewActivity extends Activity {
             list.add(new UnitItemData(getString(R.string.key_words), StudyType.Word));
         }
 
+        File unit = new File(unitDirectory);
+
         for (SongBean songBean : mLessonBean.songs) {
-            list.add(new UnitItemData(songBean.name, StudyType.Song));
+            File song = new File(unit, songBean.file);
+            if (song.exists()) {
+                list.add(new UnitItemData(songBean.name, StudyType.Song, song.getPath()));
+            }
         }
 
         for (StoryBean storyBean : mLessonBean.storys) {
-            list.add(new UnitItemData(storyBean.name, StudyType.Story));
+            File story = new File(unit, storyBean.file);
+            if (story.exists()) {
+                list.add(new UnitItemData(storyBean.name, StudyType.Story, story.getPath()));
+            }
         }
 
-        mAdapter = new UnitAdapter(this, list);
+        mAdapter = new UnitAdapter(this, list, mVideoView);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

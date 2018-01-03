@@ -84,7 +84,7 @@ public class LessonBean {
                     SongBean songBean = new SongBean();
                     songBean.type = object.optInt("type");
                     songBean.name = object.optString("name");
-                    songBean.file = object.optString("type");
+                    songBean.file = object.optString("file");
                     bean.songs.add(songBean);
                 }
             }
@@ -96,7 +96,7 @@ public class LessonBean {
                     StoryBean storyBean = new StoryBean();
                     storyBean.type = object.optInt("type");
                     storyBean.name = object.optString("name");
-                    storyBean.file = object.optString("type");
+                    storyBean.file = object.optString("file");
                     bean.storys.add(storyBean);
                 }
             }

@@ -2,12 +2,14 @@ package com.sun.amy.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.activity.DictActivity;
@@ -22,10 +24,12 @@ import java.util.List;
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder>  {
     private Activity mActivity;
     private List<UnitItemData> mData;
+    private VideoView mVideoView;
 
-    public UnitAdapter(Activity activity, List<UnitItemData> data) {
+    public UnitAdapter(Activity activity, List<UnitItemData> data, VideoView videoView) {
         mActivity = activity;
         mData = data;
+        mVideoView = videoView;
     }
 
     public void updateData(List<UnitItemData> data) {
@@ -52,6 +56,11 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
                 if (itemData.type == StudyType.Word) {
                     Intent intent = new Intent(mActivity, DictActivity.class);
                     mActivity.startActivity(intent);
+                } else {
+                    Uri uri = Uri.parse(itemData.path);
+                    mVideoView.setVideoURI(uri);
+                    mVideoView.start();
+                    mVideoView.requestFocus();
                 }
             }
         });
