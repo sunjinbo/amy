@@ -76,14 +76,14 @@ public class ReviewActivity extends Activity {
         File unit = new File(unitDirectory);
 
         for (SongBean songBean : mUnitBean.songs) {
-            File song = new File(unit, songBean.file);
+            File song = new File(songBean.file);
             if (song.exists()) {
                 list.add(new UnitItemData(songBean.name, StudyType.Song, song.getPath()));
             }
         }
 
         for (StoryBean storyBean : mUnitBean.storys) {
-            File story = new File(unit, storyBean.file);
+            File story = new File(storyBean.file);
             if (story.exists()) {
                 list.add(new UnitItemData(storyBean.name, StudyType.Story, story.getPath()));
             }

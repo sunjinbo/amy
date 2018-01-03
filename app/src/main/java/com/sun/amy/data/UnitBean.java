@@ -73,7 +73,7 @@ public class UnitBean implements Serializable {
                     wordBean.isKeyWord = (object.optInt("is_key_word") == 1);
                     wordBean.english = object.optString("english");
                     wordBean.chinese = object.optString("chinese");
-                    wordBean.img = object.optString("img");
+                    wordBean.img = path + object.optString("img");
                     bean.words.add(wordBean);
                 }
             }
@@ -85,7 +85,7 @@ public class UnitBean implements Serializable {
                     SongBean songBean = new SongBean();
                     songBean.type = object.optInt("type");
                     songBean.name = object.optString("name");
-                    songBean.file = object.optString("file");
+                    songBean.file = path + object.optString("file");
                     bean.songs.add(songBean);
                 }
             }
@@ -97,7 +97,7 @@ public class UnitBean implements Serializable {
                     StoryBean storyBean = new StoryBean();
                     storyBean.type = object.optInt("type");
                     storyBean.name = object.optString("name");
-                    storyBean.file = object.optString("file");
+                    storyBean.file = path + object.optString("file");
                     bean.storys.add(storyBean);
                 }
             }

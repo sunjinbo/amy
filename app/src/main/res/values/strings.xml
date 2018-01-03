@@ -12,4 +12,5 @@
     <string name="forget">忘记</string>
     <string name="know">认识</string>
     <string name="do_homework">做作业</string>
+    <string name="save_to_dict">已保存至生词本</string>
 </resources>

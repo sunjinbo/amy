@@ -12,19 +12,24 @@ import android.widget.TextView;
 import com.sun.amy.R;
 import com.sun.amy.data.WordBean;
 import com.sun.amy.data.WordWrapper;
+import com.sun.amy.utils.DictUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DictActivity extends Activity {
 
     private TextView mSequenceNumberTextView;
     private ImageView mFigureImageView;
     private TextView mWordTextView;
-
     private WordWrapper mWordWrapper;
-    private List<WordBean> mWords;
-    private int mIndex = -1;
+
+    private Map<String, WordBean> mStoreWords;
+
+    private List<WordBean> mStudyWords;
+    private int mStudyIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +39,21 @@ public class DictActivity extends Activity {
         Intent intent = getIntent();
         if (intent.hasExtra("unit_words")) {
             mWordWrapper = (WordWrapper) intent.getSerializableExtra("unit_words");
-            mWords = mWordWrapper.words;
+            mStudyWords = mWordWrapper.words;
         }
 
         String unitName = getString(R.string.dict);
         if (intent.hasExtra("unit_name")) {
             unitName = intent.getStringExtra("unit_name");
+        }
+
+        mStoreWords = DictUtils.readWordFromStore();
+
+        if (mStudyWords == null) {
+            mStudyWords = new ArrayList<>();
+            for (WordBean wordBean : mStoreWords.values()) {
+                mStudyWords.add(wordBean);
+            }
         }
 
         mSequenceNumberTextView = findViewById(R.id.tv_sequence_number);
@@ -53,22 +67,51 @@ public class DictActivity extends Activity {
     }
 
     public void onForgetClick(View view) {
+        if (mStudyWords.size() == 0) return;
+
+        WordBean wordBean = mStudyWords.get(mStudyIndex);
+
+        if (!mStoreWords.containsKey(wordBean.img)) {
+            wordBean.score = 0;
+            mStoreWords.put(wordBean.img, wordBean);
+            DictUtils.writeWordToStore(mStoreWords);
+        }
+
         learnNext();
     }
 
     public void onKnowClick(View view) {
+        if (mStudyWords.size() == 0) return;
+
+        WordBean wordBean = mStudyWords.get(mStudyIndex);
+
+        if (mStoreWords.containsKey(wordBean.img)) {
+            WordBean storedWordBean = mStoreWords.get(wordBean.img);
+            storedWordBean.score += 20;
+            DictUtils.writeWordToStore(mStoreWords);
+        }
+
         learnNext();
     }
 
     private void learnNext() {
-        mIndex += 1;
-        if (mIndex < mWords.size()) {
-            mSequenceNumberTextView.setText((mIndex + 1) + "/" + mWords.size());
-            File file = new File(mWordWrapper.path);
-            File bmp = new File(file, mWords.get(mIndex).img);
-            Bitmap bitmap = BitmapFactory.decodeFile(bmp.getAbsolutePath());
-            mFigureImageView.setImageBitmap(bitmap);
-            mWordTextView.setText(mWords.get(mIndex).english);
+        if (mStudyWords.size() == 0) {
+            mFigureImageView.setVisibility(View.INVISIBLE);
+            mWordTextView.setVisibility(View.INVISIBLE);
+            mSequenceNumberTextView.setText("0/0");
+        } else {
+            if (mStudyWords != null && mStudyIndex < mStudyWords.size()) {
+                WordBean wordBean = mStudyWords.get(mStudyIndex);
+
+                mFigureImageView.setImageBitmap(BitmapFactory.decodeFile(wordBean.img));
+                mWordTextView.setText(wordBean.english);
+                mSequenceNumberTextView.setText((mStudyIndex + 1) + "/" + mStudyWords.size());
+
+                mStudyIndex += 1;
+                if (mStudyIndex >= mStudyWords.size()) {
+                    mStudyIndex = 0;
+                }
+            }
         }
     }
 }
