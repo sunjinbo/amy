@@ -1,10 +1,11 @@
 package com.sun.amy.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +15,6 @@ import com.sun.amy.data.WordBean;
 import com.sun.amy.data.WordWrapper;
 import com.sun.amy.utils.DictUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +31,15 @@ public class DictActivity extends Activity {
     private List<WordBean> mStudyWords;
     private int mStudyIndex = 0;
 
+    private PowerManager.WakeLock mWakeLock;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dict);
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "amy");
 
         Intent intent = getIntent();
         if (intent.hasExtra("unit_words")) {
@@ -64,6 +69,18 @@ public class DictActivity extends Activity {
         titleTextView.setText(unitName);
 
         learnNext();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWakeLock.acquire();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWakeLock.release();
     }
 
     public void onForgetClick(View view) {

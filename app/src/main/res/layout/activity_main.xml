@@ -1,81 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/white"
     tools:context="com.sun.amy.activity.MainActivity">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:onClick="onOkEnglishClick"
-            android:text="@string/okay_english"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="4dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="96dp" />
+            <Button
+                android:onClick="onOkEnglishClick"
+                android:text="@string/okay_english"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="96dp" />
 
-        <Button
-            android:onClick="onUmiEnglishClick"
-            android:text="@string/umi_english"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="96dp" />
+            <Button
+                android:onClick="onUmiEnglishClick"
+                android:text="@string/umi_english"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="96dp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:onClick="onDictClick"
+                android:text="@string/dict"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="96dp" />
+
+            <Button
+                android:onClick="onScoreClick"
+                android:text="@string/score"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="96dp" />
+
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <ImageView
+        android:layout_gravity="bottom"
+        android:src="@drawable/bg_english"
+        android:scaleType="fitEnd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content" />
 
-        <Button
-            android:onClick="onDictClick"
-            android:text="@string/dict"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="4dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="96dp" />
-
-        <Button
-            android:onClick="onScoreClick"
-            android:text="@string/score"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="96dp" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

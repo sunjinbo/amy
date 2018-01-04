@@ -24,12 +24,30 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.DictActivity" />
-        <activity android:name=".activity.LessonsActivity" />
-        <activity android:name=".activity.HomeworkActivity" />
-        <activity android:name=".activity.ReviewActivity" />
-        <activity android:name=".activity.ScoreActivity" />
+        <activity android:name=".activity.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.DictActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.LessonsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.HomeworkActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.ReviewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.ScoreActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

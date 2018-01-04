@@ -1,8 +1,10 @@
 package com.sun.amy.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.MediaController;
@@ -31,11 +33,15 @@ public class ReviewActivity extends Activity {
     private UnitBean mUnitBean;
     private VideoView mVideoView;
     private String mUnitName;
+    private PowerManager.WakeLock mWakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "amy");
 
         String unitDirectory = "";
         Intent intent = getIntent();
@@ -49,6 +55,18 @@ public class ReviewActivity extends Activity {
 
         initView(mUnitName);
         initData(unitDirectory);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWakeLock.acquire();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWakeLock.release();
     }
 
     private void initView(String unitName) {
