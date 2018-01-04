@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,9 +19,10 @@ import com.sun.amy.utils.DictUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class DictActivity extends Activity {
+public class DictActivity extends Activity implements TextToSpeech.OnInitListener, View.OnClickListener {
 
     private TextView mSequenceNumberTextView;
     private ImageView mFigureImageView;
@@ -33,6 +36,8 @@ public class DictActivity extends Activity {
 
     private PowerManager.WakeLock mWakeLock;
 
+    private TextToSpeech mTTS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,8 @@ public class DictActivity extends Activity {
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "amy");
+
+        mTTS = new TextToSpeech(this, null);
 
         Intent intent = getIntent();
         if (intent.hasExtra("unit_words")) {
@@ -65,6 +72,9 @@ public class DictActivity extends Activity {
         mFigureImageView = findViewById(R.id.iv_figure);
         mWordTextView = findViewById(R.id.tv_word);
 
+        mFigureImageView.setOnClickListener(this);
+        mWordTextView.setOnClickListener(this);
+
         TextView titleTextView = findViewById(R.id.tv_title);
         titleTextView.setText(unitName);
 
@@ -81,6 +91,27 @@ public class DictActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mWakeLock.release();
+    }
+
+    @Override
+    public void onInit(int status) {
+        Log.d("amy", "tts init - status = " + status);
+        if (status == TextToSpeech.SUCCESS) {
+            int result = mTTS.setLanguage(Locale.US);
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.d("amy", "TTS data is lost or no supported.");
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mTTS != null && !mTTS.isSpeaking()) {
+            mTTS.setPitch(0.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+            mTTS.speak(mWordTextView.getText().toString(),
+                    TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     public void onForgetClick(View view) {
