@@ -27,14 +27,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
         mData = data;
     }
 
-    public void updateData(List<LessonItemData> data) {
-        mData.clear();
-        for (LessonItemData itemData : data) {
-            mData.add(itemData);
-        }
-        notifyDataSetChanged();
-    }
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mActivity).inflate(R.layout.list_item_lesson, parent, false);

@@ -37,14 +37,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
         mWrapper = wrapper;
     }
 
-    public void updateData(List<UnitItemData> data) {
-        mData.clear();
-        for (UnitItemData itemData : data) {
-            mData.add(itemData);
-        }
-        notifyDataSetChanged();
-    }
-
     @Override
     public UnitAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mActivity).inflate(R.layout.list_item_unit, parent, false);

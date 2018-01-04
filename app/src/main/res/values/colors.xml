@@ -3,12 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
     <color name="grey">#888888</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#0000</color>
-    <color name="red">#f00</color>
+    <color name="red">#af00</color>
     <color name="indian_red">#CD5C5C</color>
     <color name="deep_pink">#FF1493</color>
     <color name="dark_orchid">#9932CC</color>

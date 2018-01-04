@@ -36,6 +36,7 @@
         android:layout_height="128dp">
 
         <LinearLayout
+            android:id="@+id/ly_control"
             android:orientation="vertical"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
@@ -74,18 +75,21 @@
         android:layout_height="wrap_content">
 
         <RadioButton
+            android:id="@+id/rb_word"
             android:text="@string/word"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
         <RadioButton
+            android:id="@+id/rb_song"
             android:text="@string/song"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
 
         <RadioButton
+            android:id="@+id/rb_story"
             android:text="@string/story"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -118,6 +122,7 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/btn_share"
             android:onClick="onShareClick"
             android:text="@string/share_to_wechat"
             android:textSize="24sp"
