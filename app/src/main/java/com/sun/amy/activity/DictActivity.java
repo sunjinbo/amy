@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -107,11 +109,7 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
 
     @Override
     public void onClick(View view) {
-        if (mTTS != null && !mTTS.isSpeaking()) {
-            mTTS.setPitch(0.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
-            mTTS.speak(mWordTextView.getText().toString(),
-                    TextToSpeech.QUEUE_FLUSH, null);
-        }
+        speakText();
     }
 
     public void onForgetClick(View view) {
@@ -155,6 +153,8 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
                 mWordTextView.setText(wordBean.english);
                 mSequenceNumberTextView.setText((mStudyIndex + 1) + "/" + mStudyWords.size());
 
+                mSpeakHandler.sendEmptyMessageDelayed(0, 333);
+
                 mStudyIndex += 1;
                 if (mStudyIndex >= mStudyWords.size()) {
                     mStudyIndex = 0;
@@ -162,4 +162,20 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
             }
         }
     }
+
+    private void speakText() {
+        if (mTTS != null && !mTTS.isSpeaking()) {
+            mTTS.setPitch(0.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+            mTTS.speak(mWordTextView.getText().toString(),
+                    TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+
+    private Handler mSpeakHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            speakText();
+            return false;
+        }
+    });
 }
