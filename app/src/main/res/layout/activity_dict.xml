@@ -55,14 +55,14 @@
 
         <ImageView
             android:id="@+id/iv_figure"
-            android:src="@drawable/ic_merry_go_round"
+            android:src="@drawable/ic_family"
             android:layout_gravity="center"
             android:layout_width="196dp"
             android:layout_height="196dp" />
 
         <TextView
             android:id="@+id/tv_word"
-            android:text="merry-go-round"
+            android:text="@string/no_dict"
             tools:text="merry-go-round"
             android:textSize="28sp"
             android:textAlignment="center"
@@ -83,6 +83,7 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/btn_forget"
             android:onClick="onForgetClick"
             android:text="@string/forget"
             android:textSize="24sp"
@@ -93,6 +94,7 @@
             android:layout_height="76dp" />
 
         <Button
+            android:id="@+id/btn_know"
             android:onClick="onKnowClick"
             android:text="@string/know"
             android:textSize="24sp"

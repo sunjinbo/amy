@@ -11,6 +11,7 @@ import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -109,6 +110,8 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
 
     @Override
     public void onClick(View view) {
+        if (mStudyWords.size() == 0) return;
+
         speakText();
     }
 
@@ -142,9 +145,9 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
 
     private void learnNext() {
         if (mStudyWords.size() == 0) {
-            mFigureImageView.setVisibility(View.INVISIBLE);
-            mWordTextView.setVisibility(View.INVISIBLE);
             mSequenceNumberTextView.setText("0/0");
+            (findViewById(R.id.btn_forget)).setEnabled(false);
+            (findViewById(R.id.btn_know)).setEnabled(false);
         } else {
             if (mStudyWords != null && mStudyIndex < mStudyWords.size()) {
                 WordBean wordBean = mStudyWords.get(mStudyIndex);
