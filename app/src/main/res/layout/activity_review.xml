@@ -14,6 +14,7 @@
         tools:text="Unit 5 Zoo Animals"
         android:text="Unit 5 Zoo Animals"
         android:textSize="24sp"
+        android:textStyle="bold"
         android:textColor="@color/steel_blue2"
         android:singleLine="true"
         android:ellipsize="marquee"
@@ -65,6 +66,7 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:onClick="onHomeworkClick"
             android:text="@string/do_homework"
             android:textSize="24sp"
             android:textColor="@color/light_sea_green"

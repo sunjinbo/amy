@@ -1,12 +1,18 @@
 package com.sun.amy.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
+import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -33,6 +39,7 @@ public class ReviewActivity extends Activity {
     private UnitBean mUnitBean;
     private VideoView mVideoView;
     private String mUnitName;
+    private String mUnitDirectory;
     private PowerManager.WakeLock mWakeLock;
 
     @Override
@@ -43,18 +50,17 @@ public class ReviewActivity extends Activity {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "amy");
 
-        String unitDirectory = "";
         Intent intent = getIntent();
         if (intent.hasExtra("unit_name")) {
             mUnitName = intent.getStringExtra("unit_name");
         }
 
         if (intent.hasExtra("unit_directory")) {
-            unitDirectory = intent.getStringExtra("unit_directory");
+            mUnitDirectory = intent.getStringExtra("unit_directory");
         }
 
         initView(mUnitName);
-        initData(unitDirectory);
+        initData(mUnitDirectory);
     }
 
     @Override
@@ -67,6 +73,13 @@ public class ReviewActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mWakeLock.release();
+    }
+
+    public void onHomeworkClick(View view) {
+        Intent intent = new Intent(ReviewActivity.this, HomeworkActivity.class);
+        intent.putExtra("unit_name", mUnitName);
+        intent.putExtra("unit_directory", mUnitDirectory);
+        startActivity(intent);
     }
 
     private void initView(String unitName) {

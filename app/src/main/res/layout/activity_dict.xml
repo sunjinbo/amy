@@ -55,7 +55,7 @@
 
         <ImageView
             android:id="@+id/iv_figure"
-            android:src="@drawable/ic_family"
+            android:src="@drawable/bg_kids"
             android:layout_gravity="center"
             android:layout_width="196dp"
             android:layout_height="196dp" />

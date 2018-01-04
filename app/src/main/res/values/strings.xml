@@ -4,6 +4,7 @@
     <string name="okay_english">ok英语</string>
     <string name="umi_english">优咪瑞可</string>
     <string name="key_words">Key words</string>
+    <string name="Sup_words">Sup words</string>
     <string name="dict">生词本</string>
     <string name="score">成绩单</string>
     <string name="ok">确定</string>
@@ -12,6 +13,12 @@
     <string name="forget">忘记</string>
     <string name="know">认识</string>
     <string name="do_homework">做作业</string>
+    <string name="word">单词</string>
+    <string name="song">歌曲</string>
+    <string name="story">故事</string>
+    <string name="share_to_wechat">分享至微信</string>
     <string name="save_to_dict">已保存至生词本</string>
     <string name="no_dict">没有任何不认识的单词</string>
+    <string name="record">录制</string>
+    <string name="stop">停止</string>
 </resources>

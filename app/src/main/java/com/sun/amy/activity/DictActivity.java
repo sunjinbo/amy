@@ -156,8 +156,6 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
                 mWordTextView.setText(wordBean.english);
                 mSequenceNumberTextView.setText((mStudyIndex + 1) + "/" + mStudyWords.size());
 
-                mSpeakHandler.sendEmptyMessageDelayed(0, 333);
-
                 mStudyIndex += 1;
                 if (mStudyIndex >= mStudyWords.size()) {
                     mStudyIndex = 0;
@@ -173,12 +171,4 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
                     TextToSpeech.QUEUE_FLUSH, null);
         }
     }
-
-    private Handler mSpeakHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
-            speakText();
-            return false;
-        }
-    });
 }
