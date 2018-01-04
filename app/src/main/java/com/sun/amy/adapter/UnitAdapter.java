@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,9 +59,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
                 if (itemData.type == StudyType.Word) {
+                    WordWrapper wrapper;
+                    if (TextUtils.equals(mActivity.getString(R.string.key_words), itemData.title)) {
+                        wrapper = new WordWrapper(mWrapper.unit.getPath(), mWrapper.unitBean.key_words);
+                    } else {
+                        wrapper = new WordWrapper(mWrapper.unit.getPath(), mWrapper.unitBean.sup_words);
+                    }
+
                     Intent intent = new Intent(mActivity, DictActivity.class);
                     intent.putExtra("unit_name", mWrapper.unitName);
-                    intent.putExtra("unit_words", new WordWrapper(mWrapper.unit.getPath(), mWrapper.unitBean.words));
+                    intent.putExtra("unit_words", wrapper);
                     mActivity.startActivity(intent);
                 } else {
                     Uri uri = Uri.parse(itemData.path);

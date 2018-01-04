@@ -100,8 +100,12 @@ public class ReviewActivity extends Activity {
 
         mUnitBean = UnitBean.parseConfig(unitDirectory);
 
-        if (mUnitBean.words.size() > 0) {
+        if (mUnitBean.key_words.size() > 0) {
             list.add(new UnitItemData(getString(R.string.key_words), StudyType.Word));
+        }
+
+        if (mUnitBean.sup_words.size() > 0) {
+            list.add(new UnitItemData(getString(R.string.sup_words), StudyType.Word));
         }
 
         File unit = new File(unitDirectory);

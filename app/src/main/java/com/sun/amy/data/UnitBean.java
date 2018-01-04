@@ -17,7 +17,8 @@ import java.util.List;
  * UnitBean.
  */
 public class UnitBean implements Serializable {
-    public List<WordBean> words = new ArrayList<>();
+    public List<WordBean> key_words = new ArrayList<>();
+    public List<WordBean> sup_words = new ArrayList<>();
     public List<SongBean> songs = new ArrayList<>();
     public List<StoryBean> storys = new ArrayList<>();
     public String name;
@@ -74,7 +75,12 @@ public class UnitBean implements Serializable {
                     wordBean.english = object.optString("english");
                     wordBean.chinese = object.optString("chinese");
                     wordBean.img = path + object.optString("img");
-                    bean.words.add(wordBean);
+
+                    if (wordBean.isKeyWord) {
+                        bean.key_words.add(wordBean);
+                    } else {
+                        bean.sup_words.add(wordBean);
+                    }
                 }
             }
 
