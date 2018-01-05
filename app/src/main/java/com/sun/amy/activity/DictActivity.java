@@ -9,6 +9,7 @@ import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -145,6 +146,8 @@ public class DictActivity extends Activity implements TextToSpeech.OnInitListene
             mSequenceNumberTextView.setText("0/0");
             (findViewById(R.id.btn_forget)).setEnabled(false);
             (findViewById(R.id.btn_know)).setEnabled(false);
+            ((Button)findViewById(R.id.btn_forget)).setTextColor(getResources().getColor(R.color.light_grey));
+            ((Button)findViewById(R.id.btn_know)).setTextColor(getResources().getColor(R.color.light_grey));
         } else {
             if (mStudyWords != null && mStudyIndex < mStudyWords.size()) {
                 WordBean wordBean = mStudyWords.get(mStudyIndex);

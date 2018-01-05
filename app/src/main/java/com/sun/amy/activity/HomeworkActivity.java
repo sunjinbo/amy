@@ -1,17 +1,18 @@
 package com.sun.amy.activity;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -25,9 +26,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.animation.Animation.INFINITE;
+import static android.view.animation.Animation.REVERSE;
 import static android.widget.LinearLayout.VERTICAL;
 
-public class HomeworkActivity extends Activity {
+public class HomeworkActivity extends Activity implements RecordAdapter.SharedModeCallback {
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -45,6 +48,8 @@ public class HomeworkActivity extends Activity {
     private List<RecordItemData> mRecordsList = new ArrayList<>();
 
     private RecordAdapter mAdapter;
+
+    private ScaleAnimation mAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,19 +99,42 @@ public class HomeworkActivity extends Activity {
         }
     }
 
-    public void onShareClick(View view) {
-        File sharedFile = new File(Environment.getExternalStorageDirectory(), "english.jpg");
-        if (sharedFile.exists()) {
-            Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),
-                    BitmapFactory.decodeFile(sharedFile.getPath()), "", ""));
+    @Override
+    public void onSharedModeUpdated() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAdapter.isSharedMode()) {
+                    mShareButton.setEnabled(true);
+                    mShareButton.setTextColor(getResources().getColor(R.color.light_sea_green));
+                } else {
+                    mShareButton.setEnabled(false);
+                    mShareButton.setTextColor(getResources().getColor(R.color.light_grey));
+                }
+            }
+        });
+    }
 
-            Intent intent = new Intent();
-            intent.setPackage("com.tencent.mm");
-            intent.setAction(Intent.ACTION_SEND);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
-            intent.setType("image/*");
-            startActivity(Intent.createChooser(intent, "分享"));
+    public void onShareClick(View view) {
+        RecordItemData itemData = mAdapter.getSelectedRecord();
+        if (itemData != null) {
+            File sharedFile = new File(itemData.path);
+            if (sharedFile.exists()) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MediaStore.MediaColumns.TITLE, itemData.title);
+                contentValues.put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis());
+                contentValues.put(MediaStore.MediaColumns.DATA, itemData.path);
+
+                Uri uri = getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        contentValues);
+
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+                intent.setType("audio/*");
+                startActivity(Intent.createChooser(intent, getString(R.string.share)));
+            }
         }
     }
 
@@ -125,11 +153,21 @@ public class HomeworkActivity extends Activity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(VERTICAL);
         mRecyclerView.setLayoutManager(manager);
+
+        mAnimation = new ScaleAnimation(
+                0.9f, 1.0f, 0.9f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+        );
+        mAnimation.setDuration(1500);
+        mAnimation.setRepeatCount(INFINITE);
+        mAnimation.setRepeatMode(REVERSE);
+
+        findViewById(R.id.tv_record).startAnimation(mAnimation);
     }
 
     public void initData(String unitDirectory) {
         updateRecList(unitDirectory);
-        mAdapter = new RecordAdapter(this, mRecordsList);
+        mAdapter = new RecordAdapter(this, mRecordsList, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 

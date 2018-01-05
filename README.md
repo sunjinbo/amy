@@ -1,1 +1,1 @@
-# I develop this Android app for help my daughter to studying English.
+# I develop this Android app for help my daughter to do studying.

@@ -24,22 +24,30 @@ import java.util.List;
  */
 public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHolder>
         implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+
+    public interface SharedModeCallback {
+        void onSharedModeUpdated();
+    }
+
     private Activity mActivity;
     private List<RecordItemData> mData = new ArrayList<>();
-    private boolean mIsSharedModel = false;
+    private boolean mIsSharedMode = false;
     private MediaPlayer mMediaPlayer;
+    private SharedModeCallback mCallback;
 
-    public RecordAdapter(Activity activity, List<RecordItemData> data) {
+    public RecordAdapter(Activity activity, List<RecordItemData> data, SharedModeCallback callback) {
         mActivity = activity;
         mMediaPlayer = new MediaPlayer();
+        mCallback = callback;
         for (RecordItemData itemData : data) {
             mData.add(itemData);
         }
     }
 
-    public void updateData(boolean isSharedModel, List<RecordItemData> data) {
+    public void updateData(boolean isSharedMode, List<RecordItemData> data) {
         mData.clear();
-        mIsSharedModel = isSharedModel;
+        mIsSharedMode = isSharedMode;
+        notifySharedModeUpdated();
         for (RecordItemData itemData : data) {
             mData.add(itemData);
         }
@@ -62,12 +70,22 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
     }
 
     public void recoverSharedMode() {
-        mIsSharedModel = false;
+        mIsSharedMode = false;
+        notifySharedModeUpdated();
         notifyDataSetChanged();
     }
 
     public boolean isSharedMode() {
-        return mIsSharedModel;
+        return mIsSharedMode;
+    }
+
+    public RecordItemData getSelectedRecord() {
+        for (RecordItemData itemData : mData) {
+            if (itemData.is_checked) {
+                return itemData;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -84,7 +102,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
             @Override
             public void onClick(View view) {
             resetPlayer();
-            if (mIsSharedModel) {
+            if (mIsSharedMode) {
                 for (RecordItemData d : mData) {
                     if (d == itemData) {
                         d.is_checked = true;
@@ -115,8 +133,9 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         holder.mContent.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (!mIsSharedModel) {
-                    mIsSharedModel = true;
+                if (!mIsSharedMode) {
+                    mIsSharedMode = true;
+                    notifySharedModeUpdated();
 
                     for (RecordItemData d : mData) {
                         if (d == itemData) {
@@ -134,7 +153,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
 
         holder.mTitleTextView.setText(itemData.title);
 
-        if (mIsSharedModel) {
+        if (mIsSharedMode) {
             if (itemData.is_checked) {
                 holder.mTypeImageView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_radio_button_on));
             } else {
@@ -183,6 +202,12 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
             mContent = itemView.findViewById(R.id.ly_content);
             mTypeImageView = itemView.findViewById(R.id.iv_type);
             mTitleTextView = itemView.findViewById(R.id.tv_title);
+        }
+    }
+
+    private void notifySharedModeUpdated() {
+        if (mCallback != null) {
+            mCallback.onSharedModeUpdated();;
         }
     }
 }
