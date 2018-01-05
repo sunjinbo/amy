@@ -61,6 +61,15 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         }
     }
 
+    public void recoverSharedMode() {
+        mIsSharedModel = false;
+        notifyDataSetChanged();
+    }
+
+    public boolean isSharedMode() {
+        return mIsSharedModel;
+    }
+
     @Override
     public RecordAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mActivity).inflate(R.layout.list_item_record, parent, false);
@@ -110,7 +119,11 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
                     mIsSharedModel = true;
 
                     for (RecordItemData d : mData) {
-                        d.is_checked = false;
+                        if (d == itemData) {
+                            d.is_checked = true;
+                        } else {
+                            d.is_checked = false;
+                        }
                     }
 
                     notifyDataSetChanged();

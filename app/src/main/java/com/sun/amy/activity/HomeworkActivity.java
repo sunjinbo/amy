@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.RecordAdapter;
@@ -86,6 +85,15 @@ public class HomeworkActivity extends Activity {
         mAdapter.releasePlayer();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mAdapter.isSharedMode()) {
+            mAdapter.recoverSharedMode();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public void onShareClick(View view) {
         File sharedFile = new File(Environment.getExternalStorageDirectory(), "english.jpg");
         if (sharedFile.exists()) {
@@ -117,20 +125,6 @@ public class HomeworkActivity extends Activity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(VERTICAL);
         mRecyclerView.setLayoutManager(manager);
-//        mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                if (!mIsSharedMode) {
-//                    mIsSharedMode = true;
-//
-//                    for (RecordItemData itemData : mRecordsList) {
-//                        itemData.is_checked = false;
-//                    }
-//                    mAdapter.updateData(mIsSharedMode, mRecordsList);
-//                }
-//                return false;
-//            }
-//        });
     }
 
     public void initData(String unitDirectory) {

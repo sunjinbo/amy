@@ -21,4 +21,5 @@
     <string name="no_dict">没有任何不认识的单词</string>
     <string name="record">录制</string>
     <string name="stop">停止</string>
+    <string name="homework">作业</string>
 </resources>
