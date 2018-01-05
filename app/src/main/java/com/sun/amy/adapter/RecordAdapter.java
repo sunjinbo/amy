@@ -45,19 +45,24 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         }
     }
 
-    public void updateData(boolean isSharedMode, List<RecordItemData> data) {
+    public void updateData(List<RecordItemData> data) {
         mData.clear();
-        mIsSharedMode = isSharedMode;
+        mIsSharedMode = false;
+        resetPlayer();
         notifySharedModeUpdated();
         for (RecordItemData itemData : data) {
+            itemData.is_playing = false;
+            itemData.is_checked = false;
             mData.add(itemData);
         }
         notifyDataSetChanged();
     }
 
     public void resetPlayer() {
-        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
             mMediaPlayer.reset();
         }
     }

@@ -19,7 +19,7 @@
     <string name="share">分享</string>
     <string name="save_to_dict">已保存至生词本</string>
     <string name="no_dict">没有任何不认识的单词</string>
-    <string name="record">录制</string>
-    <string name="stop">停止</string>
+    <string name="record">开始录音</string>
+    <string name="stop">停止录音</string>
     <string name="homework">作业</string>
 </resources>

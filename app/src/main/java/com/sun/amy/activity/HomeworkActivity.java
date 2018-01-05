@@ -6,7 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +25,9 @@ import com.sun.amy.R;
 import com.sun.amy.adapter.RecordAdapter;
 import com.sun.amy.data.RecordItemData;
 import com.sun.amy.data.StudyType;
+import com.sun.amy.utils.AudioRecordManager;
+import com.sun.amy.utils.RecorderThread;
+import com.sun.amy.utils.TimeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,6 +38,9 @@ import static android.view.animation.Animation.REVERSE;
 import static android.widget.LinearLayout.VERTICAL;
 
 public class HomeworkActivity extends Activity implements RecordAdapter.SharedModeCallback {
+
+    private static final int MSG_UPDATE_REC_TIME = 0;
+    private static final int MSG_STOP_RECORDING = 1;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -49,7 +59,8 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
 
     private RecordAdapter mAdapter;
 
-    private ScaleAnimation mAnimation;
+    private RecorderThread mRecorderThread;
+    private long mRecorderStartTime = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,20 +160,83 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
 
         mShareButton = findViewById(R.id.btn_share);
         mControlView = findViewById(R.id.ly_control);
+        mControlView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRecorderThread == null) {
+                    String postfix = "";
+                    String directory = "";
+                    if (mWordRadioButton.isChecked()) {
+                        postfix = "_Key_Words";
+                        directory = "words";
+                    }
+                    if (mSongRadioButton.isChecked()) {
+                        postfix = "_Songs";
+                        directory = "songs";
+                    }
+                    if (mStoryRadioButton.isChecked()) {
+                        postfix = "_Storys";
+                        directory = "storys";
+                    }
+
+                    File unit = new File(mUnitDirectory);
+                    if (unit.exists()) {
+                        File rec = new File(unit, "rec");
+                        if (!rec.exists()) {
+                            rec.mkdir();
+                        }
+
+                        File dir = new File(rec, directory);
+                        if (!dir.exists()) {
+                            dir.mkdir();
+                        }
+
+                        String fileName = "Amy_" + mUnitName + postfix + ".wav";
+
+                        int count = 0;
+                        File recFile;
+                        while (true) {
+                            recFile = new File(dir, fileName);
+                            if (recFile.exists()) {
+                                count += 1;
+                                fileName = "Amy_" + mUnitName + postfix + "(" + count + ").wav";
+                            } else {
+                                break;
+                            }
+                        }
+
+                        if (recFile != null) {
+                            mRecorderThread = new RecorderThread();
+                            mRecorderThread.startRecording(recFile.getPath());
+
+                            ((TextView)findViewById(R.id.tv_record)).setText(getString(R.string.stop));
+
+                            mRecorderStartTime = SystemClock.elapsedRealtime();
+                            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
+                        }
+                    }
+                } else {
+                    mRecorderThread.stopRecording();
+                    mRecorderThread = null;
+                    mHandler.sendEmptyMessageDelayed(MSG_STOP_RECORDING, 333);
+                }
+            }
+        });
+
         mRecyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(VERTICAL);
         mRecyclerView.setLayoutManager(manager);
 
-        mAnimation = new ScaleAnimation(
-                0.9f, 1.0f, 0.9f, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
-        );
-        mAnimation.setDuration(1500);
-        mAnimation.setRepeatCount(INFINITE);
-        mAnimation.setRepeatMode(REVERSE);
-
-        findViewById(R.id.tv_record).startAnimation(mAnimation);
+//        mAnimation = new ScaleAnimation(
+//                0.9f, 1.0f, 0.9f, 1.0f,
+//                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+//        );
+//        mAnimation.setDuration(1500);
+//        mAnimation.setRepeatCount(INFINITE);
+//        mAnimation.setRepeatMode(REVERSE);
+//
+//        findViewById(R.id.tv_record).startAnimation(mAnimation);
     }
 
     public void initData(String unitDirectory) {
@@ -204,4 +278,32 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
             }
         }
     }
+
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            switch (message.what) {
+                case MSG_UPDATE_REC_TIME:
+                    if (mRecorderThread != null) {
+                        long interval = SystemClock.elapsedRealtime() - mRecorderStartTime;
+                        String intervalString = TimeUtils.formatNumberToHourMinuteSecond((double)(interval / 1000));
+                        ((TextView)findViewById(R.id.tv_rec_time)).setText(intervalString);
+                        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
+                    }
+                    break;
+
+                case MSG_STOP_RECORDING:
+                    ((TextView)findViewById(R.id.tv_record)).setText(getString(R.string.record));
+                    ((TextView)findViewById(R.id.tv_rec_time)).setText("00:00:00");
+                    updateRecList(mUnitDirectory);
+                    mAdapter.updateData(mRecordsList);
+                    break;
+
+                default:
+                    break;
+            }
+
+            return false;
+        }
+    });
 }

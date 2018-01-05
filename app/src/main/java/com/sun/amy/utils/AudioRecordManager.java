@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
  * AudioRecordManager class.
  */
 public class AudioRecordManager {
-    public static final String TAG = "AudioRecordManager";
+    public static final String TAG = "amy";
     private AudioRecord mRecorder;
     private DataOutputStream dos;
     private Thread recordThread;
