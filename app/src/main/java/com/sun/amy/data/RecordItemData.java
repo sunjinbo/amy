@@ -8,6 +8,7 @@ public class RecordItemData {
     public StudyType type;
     public String path;
     public boolean is_checked = false;
+    public boolean is_playing = false;
 
     public RecordItemData() {}
 

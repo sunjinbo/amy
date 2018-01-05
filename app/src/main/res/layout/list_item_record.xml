@@ -20,6 +20,7 @@
         android:id="@+id/tv_title"
         tools:text="Amy_Unit_1_At_School_Key_Words.wav"
         android:textSize="20sp"
+        android:textColor="@color/black"
         android:singleLine="true"
         android:ellipsize="middle"
         android:gravity="center_vertical|left"

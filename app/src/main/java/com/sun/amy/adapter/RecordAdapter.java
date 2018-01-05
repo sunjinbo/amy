@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import java.util.List;
  * RecordAdapter class.
  */
 public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHolder>
-        implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+        implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
 
     public interface SharedModeCallback {
         void onSharedModeUpdated();
@@ -114,14 +115,21 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
                 notifyDataSetChanged();
             } else {
                 try {
-                    File file = new File(itemData.path);
-                    if (file.exists()) {
-                        mMediaPlayer.setDataSource(mActivity, Uri.parse(itemData.path));
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mMediaPlayer.setLooping(false);
-                        mMediaPlayer.setOnPreparedListener(RecordAdapter.this);
-                        mMediaPlayer.setOnErrorListener(RecordAdapter.this);
-                        mMediaPlayer.prepareAsync();
+                    if (itemData.is_playing) {
+                        notifyPlayingModeUpdated(null);
+                    } else {
+                        File file = new File(itemData.path);
+                        if (file.exists()) {
+                            mMediaPlayer.setDataSource(mActivity, Uri.parse(itemData.path));
+                            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            mMediaPlayer.setLooping(false);
+                            mMediaPlayer.setOnPreparedListener(RecordAdapter.this);
+                            mMediaPlayer.setOnErrorListener(RecordAdapter.this);
+                            mMediaPlayer.setOnCompletionListener(RecordAdapter.this);
+                            mMediaPlayer.prepareAsync();
+
+                            notifyPlayingModeUpdated(itemData);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -137,12 +145,15 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
                     mIsSharedMode = true;
                     notifySharedModeUpdated();
 
+                    resetPlayer();
+
                     for (RecordItemData d : mData) {
                         if (d == itemData) {
                             d.is_checked = true;
                         } else {
                             d.is_checked = false;
                         }
+                        d.is_playing = false;
                     }
 
                     notifyDataSetChanged();
@@ -152,6 +163,11 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         });
 
         holder.mTitleTextView.setText(itemData.title);
+        if (itemData.is_playing) {
+            holder.mTitleTextView.setTextColor(mActivity.getResources().getColor(R.color.indian_red));
+        } else {
+            holder.mTitleTextView.setTextColor(mActivity.getResources().getColor(R.color.black));
+        }
 
         if (mIsSharedMode) {
             if (itemData.is_checked) {
@@ -187,7 +203,13 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
     }
 
     @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        notifyPlayingModeUpdated(null);
+    }
+
+    @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+        notifyPlayingModeUpdated(null);
         return false;
     }
 
@@ -207,7 +229,18 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
 
     private void notifySharedModeUpdated() {
         if (mCallback != null) {
-            mCallback.onSharedModeUpdated();;
+            mCallback.onSharedModeUpdated();
         }
+    }
+
+    private void notifyPlayingModeUpdated(RecordItemData itemData) {
+        for (RecordItemData d : mData) {
+            if (d == itemData) {
+                d.is_playing = true;
+            } else {
+                d.is_playing = false;
+            }
+        }
+        notifyDataSetChanged();
     }
 }
