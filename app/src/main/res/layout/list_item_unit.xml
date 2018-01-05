@@ -20,6 +20,7 @@
         android:id="@+id/tv_title"
         tools:text="Careful. Don’t fall!"
         android:textSize="20sp"
+        android:textColor="@color/black"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:gravity="center_vertical|left"

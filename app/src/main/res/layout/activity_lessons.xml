@@ -15,7 +15,6 @@
         android:text="@string/okay_english"
         android:textSize="24sp"
         android:textColor="@color/steel_blue2"
-        android:textStyle="bold"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:gravity="center_vertical|left"

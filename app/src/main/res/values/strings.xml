@@ -22,4 +22,5 @@
     <string name="record">开始录音</string>
     <string name="stop">停止录音</string>
     <string name="homework">作业</string>
+    <string name="no_file_found">无法找到该文件！</string>
 </resources>

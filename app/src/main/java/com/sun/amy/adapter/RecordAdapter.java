@@ -5,13 +5,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
+import android.widget.Toast;
 
 import com.sun.amy.R;
 import com.sun.amy.data.RecordItemData;
@@ -134,6 +133,8 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
                             mMediaPlayer.prepareAsync();
 
                             notifyPlayingModeUpdated(itemData);
+                        } else {
+                            Toast.makeText(mActivity, mActivity.getString(R.string.no_file_found), Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {

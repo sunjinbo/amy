@@ -12,7 +12,6 @@
         android:id="@+id/tv_title"
         android:text="@string/score"
         android:textSize="24sp"
-        android:textStyle="bold"
         android:textColor="@color/steel_blue2"
         android:singleLine="true"
         android:ellipsize="marquee"

@@ -14,7 +14,6 @@
         tools:text="Unit 5 Zoo Animals"
         android:text="Unit 5 Zoo Animals"
         android:textSize="24sp"
-        android:textStyle="bold"
         android:textColor="@color/steel_blue2"
         android:singleLine="true"
         android:ellipsize="marquee"
