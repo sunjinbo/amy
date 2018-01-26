@@ -39,6 +39,12 @@
             android:layout_width="match_parent"
             android:layout_height="288dp" />
 
+        <com.sun.amy.views.WordView
+            android:id="@+id/word_view"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="288dp" />
+
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -1,7 +1,6 @@
 package com.sun.amy.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sun.amy.R;
-import com.sun.amy.activity.DictActivity;
 import com.sun.amy.data.UnitWrapper;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
 import com.sun.amy.data.WordWrapper;
 import com.sun.amy.views.MediaView;
+import com.sun.amy.views.WordView;
 
 import java.util.List;
 
@@ -28,12 +27,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
     private Activity mActivity;
     private List<UnitItemData> mData;
     private MediaView mVideoView;
+    private WordView mWordView;
     private UnitWrapper mWrapper;
 
-    public UnitAdapter(Activity activity, MediaView videoView, List<UnitItemData> data, UnitWrapper wrapper) {
+    public UnitAdapter(Activity activity, MediaView videoView, WordView wordView, List<UnitItemData> data, UnitWrapper wrapper) {
         mActivity = activity;
         mData = data;
         mVideoView = videoView;
+        mWordView = wordView;
         mWrapper = wrapper;
     }
 
@@ -59,16 +60,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
                     } else {
                         wrapper = new WordWrapper(mWrapper.unit.getPath(), mWrapper.unitBean.sup_words);
                     }
+                    mWordView.setWords(wrapper);
 
-                    Intent intent = new Intent(mActivity, DictActivity.class);
-                    intent.putExtra("unit_name", mWrapper.unitName);
-                    intent.putExtra("unit_words", wrapper);
-                    mActivity.startActivity(intent);
+                    mWordView.setVisibility(View.VISIBLE);
+                    mVideoView.setVisibility(View.GONE);
                 } else {
-                    Uri uri = Uri.parse(itemData.path);
-                    mVideoView.setVideoURI(uri);
+                    mVideoView.setVideoURI(Uri.parse(itemData.path));
                     mVideoView.start();
-                    mVideoView.requestFocus();
+
+                    mWordView.setVisibility(View.GONE);
+                    mVideoView.setVisibility(View.VISIBLE);
                 }
             }
         });
