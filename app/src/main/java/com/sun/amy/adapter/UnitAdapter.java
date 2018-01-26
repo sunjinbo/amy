@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,13 +29,15 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
     private List<UnitItemData> mData;
     private MediaView mVideoView;
     private WordView mWordView;
+    private Button mHomeworkView;
     private UnitWrapper mWrapper;
 
-    public UnitAdapter(Activity activity, MediaView videoView, WordView wordView, List<UnitItemData> data, UnitWrapper wrapper) {
+    public UnitAdapter(Activity activity, MediaView videoView, WordView wordView, Button homeworkView, List<UnitItemData> data, UnitWrapper wrapper) {
         mActivity = activity;
         mData = data;
         mVideoView = videoView;
         mWordView = wordView;
+        mHomeworkView = homeworkView;
         mWrapper = wrapper;
     }
 
@@ -56,6 +59,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
                 }
 
                 itemData.selected = true;
+
+                mHomeworkView.setEnabled(true);
+                mHomeworkView.setTextColor(mActivity.getResources().getColor(R.color.indian_red));
 
                 mVideoView.stop();
 
@@ -108,6 +114,15 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public UnitItemData getSelectedItem() {
+        for (int i = 0; i < mData.size(); ++i) {
+            if (mData.get(i).selected) {
+                return mData.get(i);
+            }
+        }
+        return null;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

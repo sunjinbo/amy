@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.sun.amy.R;
@@ -18,6 +22,8 @@ import com.sun.amy.data.SongBean;
 import com.sun.amy.data.StoryBean;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
+import com.sun.amy.utils.RecorderThread;
+import com.sun.amy.utils.TimeUtils;
 import com.sun.amy.views.MediaView;
 import com.sun.amy.views.WordView;
 
@@ -29,14 +35,22 @@ import static android.widget.LinearLayout.VERTICAL;
 
 public class ReviewActivity extends Activity {
 
+    private static final int MSG_UPDATE_REC_TIME = 0;
+    private static final int MSG_STOP_RECORDING = 1;
+
     private RecyclerView mRecyclerView;
     private UnitAdapter mAdapter;
     private UnitBean mUnitBean;
     private MediaView mVideoView;
     private WordView mWordView;
+    private Button mDoHomeworkButton;
+    private TextView mWorkbookTextView;
     private String mUnitName;
     private String mUnitDirectory;
     private PowerManager.WakeLock mWakeLock;
+
+    private RecorderThread mRecorderThread;
+    private long mRecorderStartTime = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +86,72 @@ public class ReviewActivity extends Activity {
     }
 
     public void onHomeworkClick(View view) {
-        Intent intent = new Intent(ReviewActivity.this, HomeworkActivity.class);
-        intent.putExtra("unit_name", mUnitName);
-        intent.putExtra("unit_directory", mUnitDirectory);
-        startActivity(intent);
+        if (mRecorderThread == null) {
+
+            String postfix = "";
+            String directory = "";
+
+            UnitItemData itemData = mAdapter.getSelectedItem();
+
+            switch (itemData.type) {
+                case Word:
+                    postfix = "_Key_Words";
+                    directory = "words";
+                    break;
+                case Song:
+                    postfix = "_Songs";
+                    directory = "songs";
+                    break;
+                case Story:
+                    postfix = "_Storys";
+                    directory = "storys";
+                    break;
+                default:
+                    break;
+            }
+
+            File unit = new File(mUnitDirectory);
+            if (unit.exists()) {
+                File rec = new File(unit, "rec");
+                if (!rec.exists()) {
+                    rec.mkdir();
+                }
+
+                File dir = new File(rec, directory);
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
+
+                String fileName = "Amy_" + mUnitName + postfix + ".wav";
+
+                int count = 0;
+                File recFile;
+                while (true) {
+                    recFile = new File(dir, fileName);
+                    if (recFile.exists()) {
+                        count += 1;
+                        fileName = "Amy_" + mUnitName + postfix + "(" + count + ").wav";
+                    } else {
+                        break;
+                    }
+                }
+
+                if (recFile != null) {
+                    mRecorderThread = new RecorderThread();
+                    mRecorderThread.startRecording(recFile.getPath());
+
+                    mDoHomeworkButton.setText(getString(R.string.stop));
+
+                    mRecorderStartTime = SystemClock.elapsedRealtime();
+                    mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
+                }
+            }
+        } else {
+            mDoHomeworkButton.setText(getString(R.string.record));
+            mRecorderThread.stopRecording();
+            mRecorderThread = null;
+            mHandler.sendEmptyMessageDelayed(MSG_STOP_RECORDING, 333);
+        }
     }
 
     private void initView(String unitName) {
@@ -89,6 +165,17 @@ public class ReviewActivity extends Activity {
 
         mVideoView = findViewById(R.id.video_view);
         mWordView = findViewById(R.id.word_view);
+        mDoHomeworkButton = findViewById(R.id.btn_do_homework);
+        mWorkbookTextView = findViewById(R.id.tv_workbook);
+        mWorkbookTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ReviewActivity.this, HomeworkActivity.class);
+                intent.putExtra("unit_name", mUnitName);
+                intent.putExtra("unit_directory", mUnitDirectory);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initData(String unitDirectory) {
@@ -120,7 +207,31 @@ public class ReviewActivity extends Activity {
             }
         }
 
-        mAdapter = new UnitAdapter(this, mVideoView, mWordView, list, new UnitWrapper(mUnitName, mUnitBean, unit));
+        mAdapter = new UnitAdapter(this, mVideoView, mWordView, mDoHomeworkButton, list, new UnitWrapper(mUnitName, mUnitBean, unit));
         mRecyclerView.setAdapter(mAdapter);
     }
+
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            switch (message.what) {
+                case MSG_UPDATE_REC_TIME:
+                    if (mRecorderThread != null) {
+                        long interval = SystemClock.elapsedRealtime() - mRecorderStartTime;
+                        String intervalString = TimeUtils.formatNumberToHourMinuteSecond((double)(interval / 1000));
+//                        ((TextView)findViewById(R.id.tv_rec_time)).setText(intervalString);
+                        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
+                    }
+                    break;
+
+                case MSG_STOP_RECORDING:
+                    break;
+
+                default:
+                    break;
+            }
+
+            return false;
+        }
+    });
 }

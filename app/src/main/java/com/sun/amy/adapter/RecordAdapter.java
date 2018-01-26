@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import com.sun.amy.R;
 import com.sun.amy.data.RecordItemData;
@@ -29,14 +30,19 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         void onSharedModeUpdated();
     }
 
+    private static final int MSG_PLAY_RECORD_STARTED = 0;
+    private static final int MSG_PLAY_RECORD_COMPLETED = 2;
+
     private Activity mActivity;
     private List<RecordItemData> mData = new ArrayList<>();
     private boolean mIsSharedMode = false;
     private MediaPlayer mMediaPlayer;
     private SharedModeCallback mCallback;
+    private Handler mHandler;
 
-    public RecordAdapter(Activity activity, List<RecordItemData> data, SharedModeCallback callback) {
+    public RecordAdapter(Activity activity, Handler handler, List<RecordItemData> data, SharedModeCallback callback) {
         mActivity = activity;
+        mHandler = handler;
         mMediaPlayer = new MediaPlayer();
         mCallback = callback;
         for (RecordItemData itemData : data) {
@@ -44,17 +50,18 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         }
     }
 
-    public void updateData(List<RecordItemData> data) {
-        mData.clear();
-        mIsSharedMode = false;
-        resetPlayer();
-        notifySharedModeUpdated();
-        for (RecordItemData itemData : data) {
-            itemData.is_playing = false;
-            itemData.is_checked = false;
-            mData.add(itemData);
+    public int getCurrentPosition() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getCurrentPosition();
         }
-        notifyDataSetChanged();
+        return 0;
+    }
+
+    public int getDuration() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getDuration();
+        }
+        return 0;
     }
 
     public void resetPlayer() {
@@ -205,11 +212,13 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
+        mHandler.sendEmptyMessage(MSG_PLAY_RECORD_STARTED);
         mMediaPlayer.start();
     }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        mHandler.sendEmptyMessage(MSG_PLAY_RECORD_COMPLETED);
         notifyPlayingModeUpdated(null);
     }
 

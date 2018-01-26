@@ -25,84 +25,51 @@
         android:layout_width="match_parent"
         android:layout_height="48dp" />
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/vid_layout"
         android:background="@color/light_grey"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="128dp">
-
-        <LinearLayout
-            android:id="@+id/ly_control"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_record"
-                android:text="@string/record"
-                android:textSize="32sp"
-                android:textColor="@color/red"
-                android:layout_gravity="center"
-                android:layout_marginBottom="2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_rec_time"
-                android:text="00:00:00"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <RadioGroup
+        android:layout_gravity="bottom"
         android:orientation="horizontal"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp">
 
-        <RadioButton
-            android:id="@+id/rb_word"
-            android:text="@string/word"
+        <TextView
+            android:id="@+id/tv_position"
+            tools:text="00:00:36"
+            android:text="00:00:00"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:layout_gravity="left|center_vertical"
+            android:layout_width="56dp"
+            android:layout_height="48dp" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-
-        <RadioButton
-            android:id="@+id/rb_song"
-            android:text="@string/song"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-
-        <RadioButton
-            android:id="@+id/rb_story"
-            android:text="@string/story"
+            android:layout_height="4dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:progress="0"
+            android:progressDrawable="@drawable/progressbar"
+            tools:progress="38" />
 
-    </RadioGroup>
+        <TextView
+            android:id="@+id/tv_duration"
+            tools:text="00:01:12"
+            android:text="00:00:00"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_width="56dp"
+            android:layout_height="48dp" />
 
-    <VideoView
-        android:background="@color/grey"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
@@ -15,32 +14,27 @@ import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
-import android.widget.RadioButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.RecordAdapter;
 import com.sun.amy.data.RecordItemData;
 import com.sun.amy.data.StudyType;
-import com.sun.amy.utils.AudioRecordManager;
-import com.sun.amy.utils.RecorderThread;
 import com.sun.amy.utils.TimeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.view.animation.Animation.INFINITE;
-import static android.view.animation.Animation.REVERSE;
 import static android.widget.LinearLayout.VERTICAL;
 
 public class HomeworkActivity extends Activity implements RecordAdapter.SharedModeCallback {
 
-    private static final int MSG_UPDATE_REC_TIME = 0;
-    private static final int MSG_STOP_RECORDING = 1;
+    private static final int MSG_PLAY_RECORD_STARTED = 0;
+    private static final int MSG_PLAY_RECORD_UPDATED = 1;
+    private static final int MSG_PLAY_RECORD_COMPLETED = 2;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -48,19 +42,16 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
     private String mUnitDirectory;
 
     private Button mShareButton;
-    private View mControlView;
     private RecyclerView mRecyclerView;
 
-    private RadioButton mWordRadioButton;
-    private RadioButton mSongRadioButton;
-    private RadioButton mStoryRadioButton;
+    private ProgressBar mProgressBar;
+    private TextView mCurrentPositionTextView;
+    private TextView mTotalDurationTextView;
 
     private List<RecordItemData> mRecordsList = new ArrayList<>();
 
     private RecordAdapter mAdapter;
-
-    private RecorderThread mRecorderThread;
-    private long mRecorderStartTime = 0l;
+    private boolean mIsPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,95 +144,20 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
         TextView titleTextView = findViewById(R.id.tv_title);
         titleTextView.setText(unitName);
 
-        mWordRadioButton = findViewById(R.id.rb_word);
-        mWordRadioButton.setChecked(true);
-        mSongRadioButton = findViewById(R.id.rb_song);
-        mStoryRadioButton = findViewById(R.id.rb_story);
-
         mShareButton = findViewById(R.id.btn_share);
-        mControlView = findViewById(R.id.ly_control);
-        mControlView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mRecorderThread == null) {
-                    String postfix = "";
-                    String directory = "";
-                    if (mWordRadioButton.isChecked()) {
-                        postfix = "_Key_Words";
-                        directory = "words";
-                    }
-                    if (mSongRadioButton.isChecked()) {
-                        postfix = "_Songs";
-                        directory = "songs";
-                    }
-                    if (mStoryRadioButton.isChecked()) {
-                        postfix = "_Storys";
-                        directory = "storys";
-                    }
-
-                    File unit = new File(mUnitDirectory);
-                    if (unit.exists()) {
-                        File rec = new File(unit, "rec");
-                        if (!rec.exists()) {
-                            rec.mkdir();
-                        }
-
-                        File dir = new File(rec, directory);
-                        if (!dir.exists()) {
-                            dir.mkdir();
-                        }
-
-                        String fileName = "Amy_" + mUnitName + postfix + ".wav";
-
-                        int count = 0;
-                        File recFile;
-                        while (true) {
-                            recFile = new File(dir, fileName);
-                            if (recFile.exists()) {
-                                count += 1;
-                                fileName = "Amy_" + mUnitName + postfix + "(" + count + ").wav";
-                            } else {
-                                break;
-                            }
-                        }
-
-                        if (recFile != null) {
-                            mRecorderThread = new RecorderThread();
-                            mRecorderThread.startRecording(recFile.getPath());
-
-                            ((TextView)findViewById(R.id.tv_record)).setText(getString(R.string.stop));
-
-                            mRecorderStartTime = SystemClock.elapsedRealtime();
-                            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
-                        }
-                    }
-                } else {
-                    mRecorderThread.stopRecording();
-                    mRecorderThread = null;
-                    mHandler.sendEmptyMessageDelayed(MSG_STOP_RECORDING, 333);
-                }
-            }
-        });
+        mProgressBar = findViewById(R.id.progressbar);
+        mCurrentPositionTextView = findViewById(R.id.tv_position);
+        mTotalDurationTextView = findViewById(R.id.tv_duration);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(VERTICAL);
         mRecyclerView.setLayoutManager(manager);
-
-//        mAnimation = new ScaleAnimation(
-//                0.9f, 1.0f, 0.9f, 1.0f,
-//                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
-//        );
-//        mAnimation.setDuration(1500);
-//        mAnimation.setRepeatCount(INFINITE);
-//        mAnimation.setRepeatMode(REVERSE);
-//
-//        findViewById(R.id.tv_record).startAnimation(mAnimation);
     }
 
     public void initData(String unitDirectory) {
         updateRecList(unitDirectory);
-        mAdapter = new RecordAdapter(this, mRecordsList, this);
+        mAdapter = new RecordAdapter(this, mHandler, mRecordsList, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -279,24 +195,39 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
         }
     }
 
+    private int getCurrentProgress(float currentTime, float totalTime) {
+        float totalProcess = 100;
+        return  (int) ( currentTime / totalTime * totalProcess);
+    }
+
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
             switch (message.what) {
-                case MSG_UPDATE_REC_TIME:
-                    if (mRecorderThread != null) {
-                        long interval = SystemClock.elapsedRealtime() - mRecorderStartTime;
-                        String intervalString = TimeUtils.formatNumberToHourMinuteSecond((double)(interval / 1000));
-                        ((TextView)findViewById(R.id.tv_rec_time)).setText(intervalString);
-                        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
+                case MSG_PLAY_RECORD_STARTED:
+                    mIsPlaying = true;
+                    mHandler.sendEmptyMessageDelayed(MSG_PLAY_RECORD_UPDATED, 50);
+                    break;
+
+                case MSG_PLAY_RECORD_UPDATED:
+                    if (mIsPlaying) {
+                        int currentPosition = (int)((float)mAdapter.getCurrentPosition() / 1000.0f);
+                        int duration = (int)((float)mAdapter.getDuration() / 1000.0f);
+                        if (currentPosition >= 0 && duration >= 0l) {
+                            int progress = getCurrentProgress(currentPosition, duration);
+                            mProgressBar.setProgress(progress);
+                            mCurrentPositionTextView.setText(TimeUtils.formatNumberToHourMinuteSecond((double)currentPosition));
+                            mTotalDurationTextView.setText(TimeUtils.formatNumberToHourMinuteSecond((double)duration));
+                        }
+                        mHandler.sendEmptyMessageDelayed(MSG_PLAY_RECORD_UPDATED, 50);
                     }
                     break;
 
-                case MSG_STOP_RECORDING:
-                    ((TextView)findViewById(R.id.tv_record)).setText(getString(R.string.record));
-                    ((TextView)findViewById(R.id.tv_rec_time)).setText("00:00:00");
-                    updateRecList(mUnitDirectory);
-                    mAdapter.updateData(mRecordsList);
+                case MSG_PLAY_RECORD_COMPLETED:
+                    mIsPlaying = false;
+                    mProgressBar.setProgress(0);
+                    mCurrentPositionTextView.setText(TimeUtils.formatNumberToHourMinuteSecond(0.0));
+                    mTotalDurationTextView.setText(TimeUtils.formatNumberToHourMinuteSecond(0.0));
                     break;
 
                 default:
