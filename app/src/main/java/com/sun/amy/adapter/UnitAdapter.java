@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.activity.DictActivity;
@@ -18,6 +17,7 @@ import com.sun.amy.data.UnitWrapper;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
 import com.sun.amy.data.WordWrapper;
+import com.sun.amy.views.MediaView;
 
 import java.util.List;
 
@@ -27,10 +27,10 @@ import java.util.List;
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder>  {
     private Activity mActivity;
     private List<UnitItemData> mData;
-    private VideoView mVideoView;
+    private MediaView mVideoView;
     private UnitWrapper mWrapper;
 
-    public UnitAdapter(Activity activity, VideoView videoView, List<UnitItemData> data, UnitWrapper wrapper) {
+    public UnitAdapter(Activity activity, MediaView videoView, List<UnitItemData> data, UnitWrapper wrapper) {
         mActivity = activity;
         mData = data;
         mVideoView = videoView;
@@ -50,6 +50,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
         holder.mContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mVideoView.stop();
+
                 if (itemData.type == StudyType.Word) {
                     WordWrapper wrapper;
                     if (TextUtils.equals(mActivity.getString(R.string.key_words), itemData.title)) {

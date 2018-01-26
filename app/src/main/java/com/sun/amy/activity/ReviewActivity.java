@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.UnitAdapter;
@@ -20,6 +19,7 @@ import com.sun.amy.data.SongBean;
 import com.sun.amy.data.StoryBean;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
+import com.sun.amy.views.MediaView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class ReviewActivity extends Activity {
     private RecyclerView mRecyclerView;
     private UnitAdapter mAdapter;
     private UnitBean mUnitBean;
-    private VideoView mVideoView;
+    private MediaView mVideoView;
     private String mUnitName;
     private String mUnitDirectory;
     private PowerManager.WakeLock mWakeLock;
@@ -87,7 +87,6 @@ public class ReviewActivity extends Activity {
         titleTextView.setText(unitName);
 
         mVideoView = findViewById(R.id.video_view);
-        mVideoView.setMediaController(new MediaController(this));
     }
 
     private void initData(String unitDirectory) {

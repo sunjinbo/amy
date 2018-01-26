@@ -32,12 +32,12 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_width="match_parent"
-        android:layout_height="256dp">
+        android:layout_height="288dp">
 
-        <VideoView
+        <com.sun.amy.views.MediaView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
-            android:layout_height="256dp" />
+            android:layout_height="288dp" />
 
     </FrameLayout>
 
