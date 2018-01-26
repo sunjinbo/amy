@@ -21,8 +21,8 @@
                 android:id="@+id/iv_figure"
                 tools:src="@drawable/ic_family"
                 android:layout_gravity="center"
-                android:layout_width="196dp"
-                android:layout_height="196dp" />
+                android:layout_width="172dp"
+                android:layout_height="172dp" />
 
             <TextView
                 android:id="@+id/tv_word"

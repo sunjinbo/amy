@@ -51,6 +51,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
         holder.mContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                for (int i = 0; i < mData.size(); ++i) {
+                    mData.get(i).selected = false;
+                }
+
+                itemData.selected = true;
+
                 mVideoView.stop();
 
                 if (itemData.type == StudyType.Word) {
@@ -71,9 +77,19 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
                     mWordView.setVisibility(View.GONE);
                     mVideoView.setVisibility(View.VISIBLE);
                 }
+
+                notifyDataSetChanged();
             }
         });
+
         holder.mTitleTextView.setText(itemData.title);
+
+        if (itemData.selected) {
+            holder.mTitleTextView.setTextColor(mActivity.getResources().getColor(R.color.indian_red));
+        } else {
+            holder.mTitleTextView.setTextColor(mActivity.getResources().getColor(R.color.black));
+        }
+
         switch (itemData.type) {
             case Word:
                 holder.mTypeImageView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_words));

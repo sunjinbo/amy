@@ -74,7 +74,7 @@ public class WordView extends FrameLayout implements TextToSpeech.OnInitListener
     public void setWords(WordWrapper wrapper) {
         mStudyWords = wrapper.words;
         mStoreWords = DictUtils.readWordFromStore();
-
+        mStudyIndex = 0;
         if (mStudyWords == null) {
             mStudyWords = new ArrayList<>();
             for (WordBean wordBean : mStoreWords.values()) {

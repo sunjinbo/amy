@@ -7,6 +7,7 @@ public class UnitItemData {
     public String title;
     public StudyType type;
     public String path;
+    public boolean selected = false;
 
     public UnitItemData() {}
 
