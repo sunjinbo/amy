@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sun.amy.R;
 import com.sun.amy.data.WordBean;
@@ -74,13 +75,13 @@ public class WordView extends FrameLayout implements TextToSpeech.OnInitListener
     public void setWords(WordWrapper wrapper) {
         mStudyWords = wrapper.words;
         mStoreWords = DictUtils.readWordFromStore();
-        mStudyIndex = 0;
         if (mStudyWords == null) {
             mStudyWords = new ArrayList<>();
             for (WordBean wordBean : mStoreWords.values()) {
                 mStudyWords.add(wordBean);
             }
         }
+        mStudyIndex = mStudyWords.size();
 
         learnNext();
     }
@@ -101,24 +102,25 @@ public class WordView extends FrameLayout implements TextToSpeech.OnInitListener
         mFigureImageView.setOnClickListener(this);
         mWordTextView.setOnClickListener(this);
 
-        mRootView.findViewById(R.id.btn_know).setOnClickListener(new OnClickListener() {
+        mRootView.findViewById(R.id.btn_previous).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mStudyWords.size() == 0) return;
 
-                WordBean wordBean = mStudyWords.get(mStudyIndex);
+                learnPrevious();
+            }
+        });
 
-                if (mStoreWords.containsKey(wordBean.img)) {
-                    WordBean storedWordBean = mStoreWords.get(wordBean.img);
-                    storedWordBean.score += 20;
-                    DictUtils.writeWordToStore(mStoreWords);
-                }
+        mRootView.findViewById(R.id.btn_next).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mStudyWords.size() == 0) return;
 
                 learnNext();
             }
         });
 
-        mRootView.findViewById(R.id.btn_forget).setOnClickListener(new OnClickListener() {
+        mRootView.findViewById(R.id.ly_add_dict).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mStudyWords.size() == 0) return;
@@ -131,9 +133,32 @@ public class WordView extends FrameLayout implements TextToSpeech.OnInitListener
                     DictUtils.writeWordToStore(mStoreWords);
                 }
 
-                learnNext();
+                Toast.makeText(getContext(), getContext().getText(R.string.add_dict_prompt), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void learnPrevious() {
+        if (mStudyWords.size() == 0) {
+            mSequenceNumberTextView.setText("0/0");
+            (findViewById(R.id.btn_forget)).setEnabled(false);
+            (findViewById(R.id.btn_know)).setEnabled(false);
+            ((Button)findViewById(R.id.btn_forget)).setTextColor(getResources().getColor(R.color.light_grey));
+            ((Button)findViewById(R.id.btn_know)).setTextColor(getResources().getColor(R.color.light_grey));
+        } else {
+            mStudyIndex -= 1;
+            if (mStudyIndex < 0) {
+                mStudyIndex = mStudyWords.size() - 1;
+            }
+
+            if (mStudyWords != null && mStudyIndex < mStudyWords.size()) {
+                WordBean wordBean = mStudyWords.get(mStudyIndex);
+
+                mFigureImageView.setImageBitmap(BitmapFactory.decodeFile(wordBean.img));
+                mWordTextView.setText(wordBean.english);
+                mSequenceNumberTextView.setText((mStudyIndex + 1) + "/" + mStudyWords.size());
+            }
+        }
     }
 
     private void learnNext() {
@@ -144,17 +169,17 @@ public class WordView extends FrameLayout implements TextToSpeech.OnInitListener
             ((Button)findViewById(R.id.btn_forget)).setTextColor(getResources().getColor(R.color.light_grey));
             ((Button)findViewById(R.id.btn_know)).setTextColor(getResources().getColor(R.color.light_grey));
         } else {
+            mStudyIndex += 1;
+            if (mStudyIndex >= mStudyWords.size()) {
+                mStudyIndex = 0;
+            }
+
             if (mStudyWords != null && mStudyIndex < mStudyWords.size()) {
                 WordBean wordBean = mStudyWords.get(mStudyIndex);
 
                 mFigureImageView.setImageBitmap(BitmapFactory.decodeFile(wordBean.img));
                 mWordTextView.setText(wordBean.english);
                 mSequenceNumberTextView.setText((mStudyIndex + 1) + "/" + mStudyWords.size());
-
-                mStudyIndex += 1;
-                if (mStudyIndex >= mStudyWords.size()) {
-                    mStudyIndex = 0;
-                }
             }
         }
     }

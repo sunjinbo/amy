@@ -24,4 +24,8 @@
     <string name="stop">停止录音</string>
     <string name="homework">作业</string>
     <string name="no_file_found">无法找到该文件！</string>
+    <string name="add_dict">添加生词本</string>
+    <string name="add_dict_prompt">已添加至生词本！</string>
+    <string name="previous">上一个</string>
+    <string name="next">下一个</string>
 </resources>

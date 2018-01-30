@@ -40,12 +40,38 @@
             android:id="@+id/tv_sequence_number"
             tools:text="6/12"
             android:text="0/0"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textColor="@color/blue"
             android:gravity="center_vertical|center"
             android:layout_alignParentRight="true"
+            android:layout_margin="1dp"
             android:layout_width="56dp"
             android:layout_height="48dp" />
+
+        <LinearLayout
+            android:id="@+id/ly_add_dict"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_add_dict"
+                android:layout_width="22dp"
+                android:layout_height="22dp" />
+
+            <TextView
+                android:text="@string/add_dict"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:singleLine="true"
+                android:gravity="center_vertical|left"
+                android:layout_alignParentRight="true"
+                android:layout_width="100dp"
+                android:layout_height="48dp" />
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -59,8 +85,8 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btn_forget"
-            android:text="@string/forget"
+            android:id="@+id/btn_previous"
+            android:text="@string/previous"
             android:textSize="24sp"
             android:textColor="@color/indian_red"
             android:gravity="center"
@@ -69,8 +95,8 @@
             android:layout_height="48dp" />
 
         <Button
-            android:id="@+id/btn_know"
-            android:text="@string/know"
+            android:id="@+id/btn_next"
+            android:text="@string/next"
             android:textSize="24sp"
             android:textColor="@color/light_sea_green"
             android:gravity="center"
