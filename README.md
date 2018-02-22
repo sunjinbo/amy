@@ -1,9 +1,9 @@
 # Amy
 I develop this Android app for help my daughter to do studying.
 
-![study](https://github.com/sunjinbo/amy/blob/master/doc/Screenshot_20180105-190913.png)
+![study key words](https://github.com/sunjinbo/amy/blob/master/doc/Screenshot_20180222-120146.png)
 
-![do homework](https://github.com/sunjinbo/amy/blob/master/doc/Screenshot_20180105-190904.png)
+![study video](https://github.com/sunjinbo/amy/blob/master/doc/Screenshot_20180222-120153.png)
 
 
 
