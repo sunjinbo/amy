@@ -86,6 +86,13 @@ public class WordView extends FrameLayout implements TextToSpeech.OnInitListener
         learnNext();
     }
 
+    public void release() {
+        if (mTTS != null) {
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+    }
+    
     private void initView() {
         mRootView = LayoutInflater.from(getContext()).inflate(R.layout.word_view, this, false);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,

@@ -137,8 +137,14 @@ public class MediaView extends FrameLayout implements
     }
 
     public void pause() {
-        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer != null && mIsPrepared && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
+        }
+    }
+
+    public void resume() {
+        if (mMediaPlayer != null && mIsPrepared && !mMediaPlayer.isPlaying()) {
+            mMediaPlayer.start();
         }
     }
 
@@ -154,7 +160,12 @@ public class MediaView extends FrameLayout implements
         if (mMediaPlayer != null) {
             mMediaPlayer.reset();
             mMediaPlayer.release();
+            mMediaPlayer = null;
             mIsPrepared = false;
+        }
+
+        if (mDisplayHandler != null) {
+            mDisplayHandler.removeMessages(0);
         }
     }
 
@@ -195,21 +206,32 @@ public class MediaView extends FrameLayout implements
     private Handler mDisplayHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            mDisplayTime += 50;
-            if (mDisplayTime > 2000 && mControlImageView.getVisibility() == VISIBLE) {
-                mControlImageView.setVisibility(INVISIBLE);
+            try
+            {
+                if (mMediaPlayer != null) {
+
+                    mDisplayTime += 50;
+                    if (mDisplayTime > 2000 && mControlImageView.getVisibility() == VISIBLE) {
+                        mControlImageView.setVisibility(INVISIBLE);
+                    }
+
+                    if (mIsPrepared) {
+                        int currentPosition = (int)((float)mMediaPlayer.getCurrentPosition() / 1000.0f);
+                        int duration = (int)((float)mMediaPlayer.getDuration() / 1000.0f);
+                        if (currentPosition >= 0 && duration >= 0l) {
+                            int progress = getCurrentProgress(currentPosition, duration);
+                            mProgressBar.setProgress(progress);
+                            mCurrentPositionTextView.setText(TimeUtils.formatNumberToHourMinuteSecond((double)currentPosition));
+                            mTotalDurationTextView.setText(TimeUtils.formatNumberToHourMinuteSecond((double)duration));
+                        }
+                    }
+
+                    mDisplayHandler.sendEmptyMessageDelayed(0, 50);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
             }
 
-            int currentPosition = (int)((float)mMediaPlayer.getCurrentPosition() / 1000.0f);
-            int duration = (int)((float)mMediaPlayer.getDuration() / 1000.0f);
-            if (currentPosition >= 0 && duration >= 0l) {
-                int progress = getCurrentProgress(currentPosition, duration);
-                mProgressBar.setProgress(progress);
-                mCurrentPositionTextView.setText(TimeUtils.formatNumberToHourMinuteSecond((double)currentPosition));
-                mTotalDurationTextView.setText(TimeUtils.formatNumberToHourMinuteSecond((double)duration));
-            }
-
-            mDisplayHandler.sendEmptyMessageDelayed(0, 50);
             return false;
         }
     });

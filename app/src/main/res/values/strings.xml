@@ -26,6 +26,7 @@
     <string name="no_file_found">无法找到该文件！</string>
     <string name="add_dict">添加生词本</string>
     <string name="add_dict_prompt">已添加至生词本！</string>
+    <string name="add_workbook_prompt">已保存至作业本！</string>
     <string name="previous">上一个</string>
     <string name="next">下一个</string>
 </resources>

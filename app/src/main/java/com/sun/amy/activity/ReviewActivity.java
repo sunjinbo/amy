@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.UnitAdapter;
@@ -77,12 +78,21 @@ public class ReviewActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mWakeLock.acquire();
+        mVideoView.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mWakeLock.release();
+        mVideoView.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mVideoView.release();
+        mWordView.release();
     }
 
     public void onHomeworkClick(View view) {
@@ -225,6 +235,7 @@ public class ReviewActivity extends Activity {
                     break;
 
                 case MSG_STOP_RECORDING:
+                    Toast.makeText(ReviewActivity.this, getString(R.string.add_workbook_prompt), Toast.LENGTH_SHORT).show();
                     break;
 
                 default:

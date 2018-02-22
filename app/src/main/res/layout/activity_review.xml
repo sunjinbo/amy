@@ -35,7 +35,7 @@
             android:id="@+id/tv_workbook"
             android:text="@string/workbook"
             android:textSize="18sp"
-            android:textColor="@color/light_sea_green"
+            android:textColor="@color/light_grey"
             android:gravity="center_vertical|right"
             android:layout_width="56dp"
             android:layout_height="48dp" />
