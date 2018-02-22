@@ -46,6 +46,7 @@ public class ReviewActivity extends Activity {
     private WordView mWordView;
     private Button mDoHomeworkButton;
     private TextView mWorkbookTextView;
+    private TextView mRecordingTextView;
     private String mUnitName;
     private String mUnitDirectory;
     private PowerManager.WakeLock mWakeLock;
@@ -152,6 +153,9 @@ public class ReviewActivity extends Activity {
 
                     mDoHomeworkButton.setText(getString(R.string.stop));
 
+                    mRecordingTextView.setText(ReviewActivity.this.getString(R.string.recording) + " 00:00:00");
+                    mRecordingTextView.setVisibility(View.VISIBLE);
+
                     mRecorderStartTime = SystemClock.elapsedRealtime();
                     mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
                 }
@@ -176,6 +180,7 @@ public class ReviewActivity extends Activity {
         mVideoView = findViewById(R.id.video_view);
         mWordView = findViewById(R.id.word_view);
         mDoHomeworkButton = findViewById(R.id.btn_do_homework);
+        mRecordingTextView = findViewById(R.id.tv_rec);
         mWorkbookTextView = findViewById(R.id.tv_workbook);
         mWorkbookTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,12 +234,13 @@ public class ReviewActivity extends Activity {
                     if (mRecorderThread != null) {
                         long interval = SystemClock.elapsedRealtime() - mRecorderStartTime;
                         String intervalString = TimeUtils.formatNumberToHourMinuteSecond((double)(interval / 1000));
-//                        ((TextView)findViewById(R.id.tv_rec_time)).setText(intervalString);
+                        mRecordingTextView.setText(ReviewActivity.this.getString(R.string.recording) + " " + intervalString);
                         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
                     }
                     break;
 
                 case MSG_STOP_RECORDING:
+                    mRecordingTextView.setVisibility(View.INVISIBLE);
                     Toast.makeText(ReviewActivity.this, getString(R.string.add_workbook_prompt), Toast.LENGTH_SHORT).show();
                     break;
 

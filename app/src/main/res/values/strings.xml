@@ -29,4 +29,6 @@
     <string name="add_workbook_prompt">已保存至作业本！</string>
     <string name="previous">上一个</string>
     <string name="next">下一个</string>
+    <string name="recording_time_sample">录音中 00:01:12</string>
+    <string name="recording">录音中</string>
 </resources>
