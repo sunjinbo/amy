@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.sun.amy.R;
@@ -51,6 +52,14 @@ public class LessonsActivity extends Activity {
 
         TextView titleTextView = findViewById(R.id.tv_title);
         titleTextView.setText(lessonName);
+
+        TextView dictTextView = findViewById(R.id.tv_dict);
+        dictTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LessonsActivity.this, DictActivity.class));
+            }
+        });
     }
 
     private void initData(String lessonDirectory) {

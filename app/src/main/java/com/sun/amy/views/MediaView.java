@@ -37,7 +37,8 @@ public class MediaView extends FrameLayout implements
 
     private View mRootView;
     private SurfaceView mSurfaceView;
-    private ImageView mControlImageView;
+    private ImageView mPlayImageView;
+    private ImageView mPauseImageView;
     private ProgressBar mProgressBar;
     private TextView mCurrentPositionTextView;
     private TextView mTotalDurationTextView;
@@ -60,22 +61,36 @@ public class MediaView extends FrameLayout implements
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         mDisplayTime = 0;
-        if (mControlImageView.getVisibility() == INVISIBLE && mIsPrepared) {
-            mControlImageView.setVisibility(VISIBLE);
+
+        if (mPlayImageView.getVisibility() == INVISIBLE && mIsPrepared) {
+            if (!mMediaPlayer.isPlaying()) {
+                mPlayImageView.setVisibility(VISIBLE);
+            }
         }
+
+        if (mPauseImageView.getVisibility() == INVISIBLE && mIsPrepared) {
+            if (mMediaPlayer.isPlaying()) {
+                mPauseImageView.setVisibility(VISIBLE);
+            }
+        }
+
         return super.onTouchEvent(e);
     }
 
     @Override
     public void onClick(View view) {
-        if (mIsPrepared) {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.pause();
-                mControlImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
-            } else {
+        if (view.getId() == R.id.iv_play) {
+            if (mIsPrepared && !mMediaPlayer.isPlaying()) {
                 mMediaPlayer.start();
-                mControlImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
             }
+            mPlayImageView.setVisibility(INVISIBLE);
+            mPauseImageView.setVisibility(VISIBLE);
+        } else if (view.getId() == R.id.iv_pause) {
+            if (mIsPrepared && mMediaPlayer.isPlaying()) {
+                mMediaPlayer.pause();
+            }
+            mPlayImageView.setVisibility(VISIBLE);
+            mPauseImageView.setVisibility(INVISIBLE);
         }
     }
 
@@ -86,7 +101,7 @@ public class MediaView extends FrameLayout implements
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
+        // no need to implementation required
     }
 
     @Override
@@ -114,6 +129,18 @@ public class MediaView extends FrameLayout implements
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer, int i, int i1) {
         return false;
+    }
+
+    public void setMute(boolean mute) {
+//        if (mute) {
+//            if (mMediaPlayer != null) {
+//                mMediaPlayer.setVolume(0f, 0f);
+//            } else {
+//                mMediaPlayer.setVolume(1f, 1f);
+//            }
+//        } else {
+//
+//        }
     }
 
     public void setVideoURI(Uri uri) {
@@ -177,12 +204,14 @@ public class MediaView extends FrameLayout implements
         addView(mRootView);
 
         mSurfaceView = mRootView.findViewById(R.id.surface_view);
-        mControlImageView = mRootView.findViewById(R.id.iv_control);
+        mPlayImageView = mRootView.findViewById(R.id.iv_play);
+        mPauseImageView = mRootView.findViewById(R.id.iv_pause);
         mProgressBar = mRootView.findViewById(R.id.progressbar);
         mCurrentPositionTextView = mRootView.findViewById(R.id.tv_position);
         mTotalDurationTextView = mRootView.findViewById(R.id.tv_duration);
 
-        mControlImageView.setOnClickListener(this);
+        mPlayImageView.setOnClickListener(this);
+        mPauseImageView.setOnClickListener(this);
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -211,8 +240,14 @@ public class MediaView extends FrameLayout implements
                 if (mMediaPlayer != null) {
 
                     mDisplayTime += 50;
-                    if (mDisplayTime > 2000 && mControlImageView.getVisibility() == VISIBLE) {
-                        mControlImageView.setVisibility(INVISIBLE);
+                    if (mDisplayTime > 2000) {
+                        if (mPlayImageView.getVisibility() == VISIBLE) {
+                            mPlayImageView.setVisibility(INVISIBLE);
+                        }
+
+                        if (mPauseImageView.getVisibility() == VISIBLE) {
+                            mPauseImageView.setVisibility(INVISIBLE);
+                        }
                     }
 
                     if (mIsPrepared) {

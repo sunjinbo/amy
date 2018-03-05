@@ -17,9 +17,20 @@
             android:layout_height="240dp" />
 
         <ImageView
+            tools:visibility="visible"
             android:visibility="invisible"
-            android:id="@+id/iv_control"
-            android:src="@drawable/ic_pause"
+            android:id="@+id/iv_pause"
+            android:src="@drawable/btn_pause_selector"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
+        <ImageView
+            tools:visibility="invisible"
+            android:visibility="invisible"
+            android:id="@+id/iv_play"
+            android:src="@drawable/btn_play_select"
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_width="48dp"

@@ -30,7 +30,11 @@ public class SplashActivity extends Activity {
     final Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            Intent intent = new Intent(SplashActivity.this, LessonsActivity.class);
+            intent.putExtra("lesson_name", getString(R.string.okay_english));
+            intent.putExtra("lesson_directory", "ok");
+            startActivity(intent);
             finish();
             return false;
         }
