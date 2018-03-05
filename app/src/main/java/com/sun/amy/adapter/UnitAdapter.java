@@ -77,7 +77,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
                     mWordView.setVisibility(View.VISIBLE);
                     mVideoView.setVisibility(View.GONE);
                 } else {
-                    mVideoView.setVideoURI(Uri.parse(itemData.path));
+                    if (itemData.type == StudyType.Vocabulary) {
+                        mVideoView.setVideoURI(Uri.parse(itemData.path), itemData.title, true);
+                    } else {
+                        mVideoView.setVideoURI(Uri.parse(itemData.path), itemData.title, false);
+                    }
+
                     mVideoView.start();
 
                     mWordView.setVisibility(View.GONE);
@@ -97,6 +102,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.MyViewHolder> 
         }
 
         switch (itemData.type) {
+            case Vocabulary:
+                holder.mTypeImageView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_vocabulary));
+                break;
             case Word:
                 holder.mTypeImageView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_words));
                 break;

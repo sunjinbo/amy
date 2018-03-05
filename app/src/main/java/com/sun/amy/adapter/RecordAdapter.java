@@ -17,7 +17,6 @@ import com.sun.amy.R;
 import com.sun.amy.data.RecordItemData;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -188,6 +187,9 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
             }
         } else {
             switch (itemData.type) {
+                case Vocabulary:
+                    holder.mTypeImageView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_vocabulary));
+                    break;
                 case Word:
                     holder.mTypeImageView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_words));
                     break;

@@ -23,6 +23,7 @@ import com.sun.amy.data.SongBean;
 import com.sun.amy.data.StoryBean;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
+import com.sun.amy.data.VocabularyBean;
 import com.sun.amy.utils.RecorderThread;
 import com.sun.amy.utils.TimeUtils;
 import com.sun.amy.views.MediaView;
@@ -99,7 +100,7 @@ public class ReviewActivity extends Activity {
     public void onHomeworkClick(View view) {
         if (mRecorderThread == null) {
 
-            String postfix = "";
+            String postfix;
             String directory = "";
 
             UnitItemData itemData = mAdapter.getSelectedItem();
@@ -111,6 +112,9 @@ public class ReviewActivity extends Activity {
             postfix = postfix.replace("?", "");
 
             switch (itemData.type) {
+                case Vocabulary:
+                    directory = "vocabulary";
+                    break;
                 case Word:
                     directory = "words";
                     break;
@@ -210,6 +214,13 @@ public class ReviewActivity extends Activity {
         }
 
         File unit = new File(unitDirectory);
+
+        for (VocabularyBean vocabularyBean : mUnitBean.vocabulary) {
+            File vocabulary = new File(vocabularyBean.file);
+            if (vocabulary.exists()) {
+                list.add(new UnitItemData(vocabularyBean.name, StudyType.Vocabulary, vocabulary.getPath()));
+            }
+        }
 
         for (SongBean songBean : mUnitBean.songs) {
             File song = new File(songBean.file);

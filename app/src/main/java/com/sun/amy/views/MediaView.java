@@ -46,6 +46,10 @@ public class MediaView extends FrameLayout implements
     private ProgressBar mProgressBar;
     private TextView mCurrentPositionTextView;
     private TextView mTotalDurationTextView;
+
+    private FrameLayout mCoverLayout;
+    private TextView mCoverTitleTextView;
+
     private MediaPlayer mMediaPlayer;
     private SurfaceHolder mSurfaceHolder;
 
@@ -172,8 +176,16 @@ public class MediaView extends FrameLayout implements
         return mute;
     }
 
-    public void setVideoURI(Uri uri) {
+    public void setVideoURI(Uri uri, String name, boolean isAudio) {
         try {
+            if (isAudio) {
+                mCoverTitleTextView.setText(name);
+                mCoverLayout.setVisibility(VISIBLE);
+            } else {
+                mCoverTitleTextView.setText("");
+                mCoverLayout.setVisibility(INVISIBLE);
+            }
+
             if (mMediaPlayer != null) {
                 mMediaPlayer.setDataSource(getContext(), uri);
             }
@@ -239,6 +251,9 @@ public class MediaView extends FrameLayout implements
         mProgressBar = mRootView.findViewById(R.id.progressbar);
         mCurrentPositionTextView = mRootView.findViewById(R.id.tv_position);
         mTotalDurationTextView = mRootView.findViewById(R.id.tv_duration);
+
+        mCoverLayout = mRootView.findViewById(R.id.ly_cover);
+        mCoverTitleTextView = mRootView.findViewById(R.id.tv_cover_title);
 
         if (isMute()) {
             mMuteImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_mute));

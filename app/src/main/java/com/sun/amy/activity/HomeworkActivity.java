@@ -202,6 +202,11 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
                 if (storys.exists()) {
                     scanRec(storys, StudyType.Story);
                 }
+
+                File vocabulary = new File(rec, "vocabulary");
+                if (vocabulary.exists()) {
+                    scanRec(vocabulary, StudyType.Vocabulary);
+                }
             }
         }
     }

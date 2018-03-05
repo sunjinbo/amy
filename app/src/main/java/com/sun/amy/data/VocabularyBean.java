@@ -1,8 +1,12 @@
 package com.sun.amy.data;
 
-/**
- * Created by sunjinbo on 2018/3/5.
- */
+import java.io.Serializable;
 
-public class VocabularyBean {
+/**
+ * VocabularyBean class.
+ */
+public class VocabularyBean implements Serializable {
+    public int type;
+    public String name;
+    public String file;
 }

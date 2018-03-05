@@ -21,6 +21,7 @@ public class UnitBean implements Serializable {
     public List<WordBean> sup_words = new ArrayList<>();
     public List<SongBean> songs = new ArrayList<>();
     public List<StoryBean> storys = new ArrayList<>();
+    public List<VocabularyBean> vocabulary = new ArrayList<>();
     public String name;
     public String type;
     public String level;
@@ -81,6 +82,18 @@ public class UnitBean implements Serializable {
                     } else {
                         bean.sup_words.add(wordBean);
                     }
+                }
+            }
+
+            if (rootObj.has("vocabulary")) {
+                JSONArray array = rootObj.getJSONArray("vocabulary");
+                for (int i = 0; i < array.length(); ++i) {
+                    JSONObject object = (JSONObject) array.get(i);
+                    VocabularyBean vocabularyBean = new VocabularyBean();
+                    vocabularyBean.type = object.optInt("type");
+                    vocabularyBean.name = object.optString("name");
+                    vocabularyBean.file = path + object.optString("file");
+                    bean.vocabulary.add(vocabularyBean);
                 }
             }
 
