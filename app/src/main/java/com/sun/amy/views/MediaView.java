@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import android.os.Handler;
 
 import com.sun.amy.R;
+import com.sun.amy.configs.PrefKeys;
+import com.sun.amy.configs.PrefSettings;
 import com.sun.amy.utils.TimeUtils;
 
 import java.io.IOException;
@@ -37,8 +40,9 @@ public class MediaView extends FrameLayout implements
 
     private View mRootView;
     private SurfaceView mSurfaceView;
+    private ViewGroup mControlViewGroup;
     private ImageView mPlayImageView;
-    private ImageView mPauseImageView;
+    private ImageView mMuteImageView;
     private ProgressBar mProgressBar;
     private TextView mCurrentPositionTextView;
     private TextView mTotalDurationTextView;
@@ -62,16 +66,8 @@ public class MediaView extends FrameLayout implements
     public boolean onTouchEvent(MotionEvent e) {
         mDisplayTime = 0;
 
-        if (mPlayImageView.getVisibility() == INVISIBLE && mIsPrepared) {
-            if (!mMediaPlayer.isPlaying()) {
-                mPlayImageView.setVisibility(VISIBLE);
-            }
-        }
-
-        if (mPauseImageView.getVisibility() == INVISIBLE && mIsPrepared) {
-            if (mMediaPlayer.isPlaying()) {
-                mPauseImageView.setVisibility(VISIBLE);
-            }
+        if (mControlViewGroup.getVisibility() == INVISIBLE && mIsPrepared) {
+            mControlViewGroup.setVisibility(VISIBLE);
         }
 
         return super.onTouchEvent(e);
@@ -80,17 +76,29 @@ public class MediaView extends FrameLayout implements
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.iv_play) {
-            if (mIsPrepared && !mMediaPlayer.isPlaying()) {
-                mMediaPlayer.start();
+            if (mIsPrepared) {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+                    mPlayImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_play));
+                } else {
+                    mMediaPlayer.start();
+                    mPlayImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+                }
             }
-            mPlayImageView.setVisibility(INVISIBLE);
-            mPauseImageView.setVisibility(VISIBLE);
-        } else if (view.getId() == R.id.iv_pause) {
-            if (mIsPrepared && mMediaPlayer.isPlaying()) {
-                mMediaPlayer.pause();
+        } else if (view.getId() == R.id.iv_mute) {
+            if (mIsPrepared) {
+                if (isMute()) {
+                    if (setMute(false)) {
+                        mMuteImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_unmute));
+                        mMediaPlayer.setVolume(1f, 1f);
+                    }
+                } else {
+                    if (setMute(true)) {
+                        mMuteImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_mute));
+                        mMediaPlayer.setVolume(0f, 0f);
+                    }
+                }
             }
-            mPlayImageView.setVisibility(VISIBLE);
-            mPauseImageView.setVisibility(INVISIBLE);
         }
     }
 
@@ -111,7 +119,7 @@ public class MediaView extends FrameLayout implements
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
+        // no need to implementation required
     }
 
     @Override
@@ -124,6 +132,11 @@ public class MediaView extends FrameLayout implements
     public void onPrepared(MediaPlayer mediaPlayer) {
         mIsPrepared = true;
         mMediaPlayer.start();
+        if (isMute()) {
+            mMediaPlayer.setVolume(0f, 0f);
+        } else {
+            mMediaPlayer.setVolume(1f, 1f);
+        }
     }
 
     @Override
@@ -131,16 +144,32 @@ public class MediaView extends FrameLayout implements
         return false;
     }
 
-    public void setMute(boolean mute) {
-//        if (mute) {
-//            if (mMediaPlayer != null) {
-//                mMediaPlayer.setVolume(0f, 0f);
-//            } else {
-//                mMediaPlayer.setVolume(1f, 1f);
-//            }
-//        } else {
-//
-//        }
+    public boolean setMute(boolean mute) {
+        boolean success = true;
+        try {
+            PrefSettings.getSettings(getContext()).setValue(PrefKeys.KEY_MUTE, Boolean.toString(mute));
+            PrefSettings.getSettings(getContext()).save();
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+
+        return success;
+    }
+
+    public boolean isMute() {
+        boolean mute = false;
+
+        try {
+            if (PrefSettings.getSettings(getContext()).containsKey(PrefKeys.KEY_MUTE)) {
+                String keyValue = PrefSettings.getSettings(getContext()).getValue(PrefKeys.KEY_MUTE);
+                mute = Boolean.parseBoolean(keyValue);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mute;
     }
 
     public void setVideoURI(Uri uri) {
@@ -204,14 +233,21 @@ public class MediaView extends FrameLayout implements
         addView(mRootView);
 
         mSurfaceView = mRootView.findViewById(R.id.surface_view);
+        mControlViewGroup = mRootView.findViewById(R.id.ly_control);
         mPlayImageView = mRootView.findViewById(R.id.iv_play);
-        mPauseImageView = mRootView.findViewById(R.id.iv_pause);
+        mMuteImageView = mRootView.findViewById(R.id.iv_mute);
         mProgressBar = mRootView.findViewById(R.id.progressbar);
         mCurrentPositionTextView = mRootView.findViewById(R.id.tv_position);
         mTotalDurationTextView = mRootView.findViewById(R.id.tv_duration);
 
+        if (isMute()) {
+            mMuteImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_mute));
+        } else {
+            mMuteImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_unmute));
+        }
+
         mPlayImageView.setOnClickListener(this);
-        mPauseImageView.setOnClickListener(this);
+        mMuteImageView.setOnClickListener(this);
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -241,12 +277,8 @@ public class MediaView extends FrameLayout implements
 
                     mDisplayTime += 50;
                     if (mDisplayTime > 2000) {
-                        if (mPlayImageView.getVisibility() == VISIBLE) {
-                            mPlayImageView.setVisibility(INVISIBLE);
-                        }
-
-                        if (mPauseImageView.getVisibility() == VISIBLE) {
-                            mPauseImageView.setVisibility(INVISIBLE);
+                        if (mControlViewGroup.getVisibility() == VISIBLE) {
+                            mControlViewGroup.setVisibility(INVISIBLE);
                         }
                     }
 

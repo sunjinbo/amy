@@ -16,25 +16,32 @@
             android:layout_width="match_parent"
             android:layout_height="240dp" />
 
-        <ImageView
+        <RelativeLayout
+            android:id="@+id/ly_control"
             tools:visibility="visible"
             android:visibility="invisible"
-            android:id="@+id/iv_pause"
-            android:src="@drawable/btn_pause_selector"
             android:gravity="center"
             android:layout_gravity="center"
-            android:layout_width="48dp"
-            android:layout_height="48dp" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            tools:visibility="invisible"
-            android:visibility="invisible"
-            android:id="@+id/iv_play"
-            android:src="@drawable/btn_play_select"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_width="48dp"
-            android:layout_height="48dp" />
+            <ImageView
+                android:id="@+id/iv_play"
+                android:src="@drawable/ic_pause"
+                android:layout_marginRight="16dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+            <ImageView
+                android:id="@+id/iv_mute"
+                android:src="@drawable/ic_mute"
+                android:layout_toRightOf="@id/iv_play"
+                android:layout_marginLeft="16dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+        </RelativeLayout>
+
     </FrameLayout>
 
     <LinearLayout
