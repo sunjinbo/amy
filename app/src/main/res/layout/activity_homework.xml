@@ -110,6 +110,20 @@
             android:layout_width="0dp"
             android:layout_height="76dp" />
 
+        <Button
+            tools:enabled="true"
+            tools:textColor="@color/indian_red"
+            android:id="@+id/btn_delete"
+            android:onClick="onDeleteClick"
+            android:text="@string/delete"
+            android:textSize="24sp"
+            android:enabled="false"
+            android:textColor="@color/light_grey"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="76dp" />
+
     </LinearLayout>
 
 </LinearLayout>

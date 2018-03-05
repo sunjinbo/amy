@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +41,7 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
     private String mUnitDirectory;
 
     private Button mShareButton;
+    private Button mDeleteButton;
     private RecyclerView mRecyclerView;
 
     private ProgressBar mProgressBar;
@@ -109,9 +109,15 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
                 if (mAdapter.isSharedMode()) {
                     mShareButton.setEnabled(true);
                     mShareButton.setTextColor(getResources().getColor(R.color.light_sea_green));
+
+                    mDeleteButton.setEnabled(true);
+                    mDeleteButton.setTextColor(getResources().getColor(R.color.indian_red));
                 } else {
                     mShareButton.setEnabled(false);
                     mShareButton.setTextColor(getResources().getColor(R.color.light_grey));
+
+                    mDeleteButton.setEnabled(false);
+                    mDeleteButton.setTextColor(getResources().getColor(R.color.light_grey));
                 }
             }
         });
@@ -140,11 +146,26 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
         }
     }
 
+    public void onDeleteClick(View view) {
+        RecordItemData itemData = mAdapter.getSelectedRecord();
+        if (itemData != null) {
+            File sharedFile = new File(itemData.path);
+            if (sharedFile.exists()) {
+                sharedFile.delete();
+            }
+
+            updateRecList(mUnitDirectory);
+
+            mAdapter.recoverSharedMode();
+        }
+    }
+
     private void initView(String unitName) {
         TextView titleTextView = findViewById(R.id.tv_title);
         titleTextView.setText(unitName);
 
         mShareButton = findViewById(R.id.btn_share);
+        mDeleteButton = findViewById(R.id.btn_delete);
         mProgressBar = findViewById(R.id.progressbar);
         mCurrentPositionTextView = findViewById(R.id.tv_position);
         mTotalDurationTextView = findViewById(R.id.tv_duration);

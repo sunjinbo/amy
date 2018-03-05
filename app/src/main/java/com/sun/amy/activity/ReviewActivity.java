@@ -109,7 +109,7 @@ public class ReviewActivity extends Activity {
             postfix = postfix.replace(".", "");
             postfix = postfix.replace("!", "");
             postfix = postfix.replace("?", "");
-            
+
             switch (itemData.type) {
                 case Word:
                     directory = "words";

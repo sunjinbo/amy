@@ -34,7 +34,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
     private static final int MSG_PLAY_RECORD_COMPLETED = 2;
 
     private Activity mActivity;
-    private List<RecordItemData> mData = new ArrayList<>();
+    private List<RecordItemData> mData;
     private boolean mIsSharedMode = false;
     private MediaPlayer mMediaPlayer;
     private SharedModeCallback mCallback;
@@ -45,9 +45,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         mHandler = handler;
         mMediaPlayer = new MediaPlayer();
         mCallback = callback;
-        for (RecordItemData itemData : data) {
-            mData.add(itemData);
-        }
+        mData = data;
     }
 
     public int getCurrentPosition() {
