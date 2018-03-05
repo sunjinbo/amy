@@ -1,5 +1,11 @@
 package com.sun.amy.data;
 
+import com.sun.amy.utils.CapacityUtil;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * RecordItemData class.
  */
@@ -21,5 +27,16 @@ public class RecordItemData {
         this.title = title;
         this.type = type;
         this.path = path;
+    }
+
+    public String getCreateTime() {
+        File file = new File(path);
+        Date lastModDate = new Date(file.lastModified());
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(lastModDate);
+    }
+
+    public String getSize() {
+        File file = new File(path);
+        return CapacityUtil.ConvertByteToString(file.length());
     }
 }

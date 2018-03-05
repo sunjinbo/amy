@@ -59,8 +59,9 @@
 
             <ImageView
                 android:src="@drawable/ic_add_dict"
-                android:layout_width="22dp"
-                android:layout_height="22dp" />
+                android:layout_margin="2dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp" />
 
             <TextView
                 android:text="@string/add_dict"
@@ -74,7 +75,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
 
     <LinearLayout
         android:id="@+id/words_layout"

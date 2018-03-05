@@ -104,17 +104,20 @@ public class ReviewActivity extends Activity {
 
             UnitItemData itemData = mAdapter.getSelectedItem();
 
+            postfix = itemData.title.replace(' ', '_');
+            postfix = postfix.replace(",", "");
+            postfix = postfix.replace(".", "");
+            postfix = postfix.replace("!", "");
+            postfix = postfix.replace("?", "");
+            
             switch (itemData.type) {
                 case Word:
-                    postfix = "_Key_Words";
                     directory = "words";
                     break;
                 case Song:
-                    postfix = "_Songs";
                     directory = "songs";
                     break;
                 case Story:
-                    postfix = "_Storys";
                     directory = "storys";
                     break;
                 default:
@@ -133,7 +136,7 @@ public class ReviewActivity extends Activity {
                     dir.mkdir();
                 }
 
-                String fileName = "Amy_" + mUnitName + postfix + ".wav";
+                String fileName = "Amy_" + postfix + ".wav";
 
                 int count = 0;
                 File recFile;
@@ -141,7 +144,7 @@ public class ReviewActivity extends Activity {
                     recFile = new File(dir, fileName);
                     if (recFile.exists()) {
                         count += 1;
-                        fileName = "Amy_" + mUnitName + postfix + "(" + count + ").wav";
+                        fileName = "Amy_" + postfix + "(" + count + ").wav";
                     } else {
                         break;
                     }

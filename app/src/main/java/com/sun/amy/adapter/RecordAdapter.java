@@ -203,6 +203,9 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
                     break;
             }
         }
+
+        holder.mCreateTimeTextView.setText(itemData.getCreateTime());
+        holder.mSizeTextView.setText(itemData.getSize());
     }
 
     @Override
@@ -233,12 +236,16 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.MyViewHold
         private ViewGroup mContent;
         private ImageView mTypeImageView;
         private TextView mTitleTextView;
+        private TextView mCreateTimeTextView;
+        private TextView mSizeTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mContent = itemView.findViewById(R.id.ly_content);
             mTypeImageView = itemView.findViewById(R.id.iv_type);
             mTitleTextView = itemView.findViewById(R.id.tv_title);
+            mCreateTimeTextView = itemView.findViewById(R.id.tv_create_time);
+            mSizeTextView = itemView.findViewById(R.id.tv_size);
         }
     }
 
