@@ -25,6 +25,8 @@ import com.sun.amy.utils.TimeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -208,6 +210,8 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
                     scanRec(vocabulary, StudyType.Vocabulary);
                 }
             }
+
+            Collections.sort(mRecordsList);
         }
     }
 
