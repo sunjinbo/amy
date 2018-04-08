@@ -24,6 +24,7 @@ import com.sun.amy.data.StoryBean;
 import com.sun.amy.data.StudyType;
 import com.sun.amy.data.UnitItemData;
 import com.sun.amy.data.VocabularyBean;
+import com.sun.amy.utils.MediaRecorderThread;
 import com.sun.amy.utils.RecorderThread;
 import com.sun.amy.utils.TimeUtils;
 import com.sun.amy.views.MediaView;
@@ -52,7 +53,7 @@ public class ReviewActivity extends Activity {
     private String mUnitDirectory;
     private PowerManager.WakeLock mWakeLock;
 
-    private RecorderThread mRecorderThread;
+    private MediaRecorderThread mRecorderThread;
     private long mRecorderStartTime = 0l;
 
     @Override
@@ -140,7 +141,7 @@ public class ReviewActivity extends Activity {
                     dir.mkdir();
                 }
 
-                String fileName = "Amy_" + postfix + ".wav";
+                String fileName = "Amy_" + postfix + ".m4a";
 
                 int count = 0;
                 File recFile;
@@ -148,14 +149,14 @@ public class ReviewActivity extends Activity {
                     recFile = new File(dir, fileName);
                     if (recFile.exists()) {
                         count += 1;
-                        fileName = "Amy_" + postfix + "(" + count + ").wav";
+                        fileName = "Amy_" + postfix + "(" + count + ").m4a";
                     } else {
                         break;
                     }
                 }
 
                 if (recFile != null) {
-                    mRecorderThread = new RecorderThread();
+                    mRecorderThread = new MediaRecorderThread();
                     mRecorderThread.startRecording(recFile.getPath());
 
                     mDoHomeworkButton.setText(getString(R.string.stop));

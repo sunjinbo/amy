@@ -1,6 +1,7 @@
 package com.sun.amy.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -139,6 +140,10 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
                         contentValues);
 
                 Intent intent = new Intent();
+                ComponentName comp = new ComponentName(
+                        "com.tencent.mm",
+                        "com.tencent.mm.ui.tools.ShareToTimeLineUI");
+                intent.setComponent(comp);
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -218,7 +223,7 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
     private void scanRec(File directory, StudyType type) {
         File[] files = directory.listFiles();
         for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(".wav")) {
+            if (file.isFile() && (file.getName().endsWith(".wav") || file.getName().endsWith(".m4a"))) {
                 RecordItemData itemData = new RecordItemData(file.getName(), type, file.getPath());
                 mRecordsList.add(itemData);
             }
