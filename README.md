@@ -1,9 +1,8 @@
 # Amy
-I develop this Android app for help my daughter to do studying.
+I develop this app for helping my daughter to studying English more efficiently.
 
-![study key words](https://github.com/sunjinbo/amy/blob/master/doc/Screenshot_20180222-120146.png)
+![study key words](https://github.com/sunjinbo/amy/blob/master/doc/screenshot.jpg)
 
-![study video](https://github.com/sunjinbo/amy/blob/master/doc/Screenshot_20180222-120153.png)
 
 
 
