@@ -11,6 +11,7 @@ import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.sun.amy.views.WordView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -49,6 +51,8 @@ public class ReviewActivity extends Activity {
     private Button mDoHomeworkButton;
     private TextView mWorkbookTextView;
     private TextView mRecordingTextView;
+    private ViewGroup mRecordingViewGroup;
+    private ViewGroup mRootViewGroup;
     private String mUnitName;
     private String mUnitDirectory;
     private PowerManager.WakeLock mWakeLock;
@@ -161,8 +165,9 @@ public class ReviewActivity extends Activity {
 
                     mDoHomeworkButton.setText(getString(R.string.stop));
 
-                    mRecordingTextView.setText(ReviewActivity.this.getString(R.string.recording) + " 00:00:00");
-                    mRecordingTextView.setVisibility(View.VISIBLE);
+                    mRecordingTextView.setText("00:00:00");
+                    mRecordingViewGroup.setVisibility(View.VISIBLE);
+                    mRootViewGroup.setBackgroundColor(getResources().getColor(R.color.white));
 
                     mRecorderStartTime = SystemClock.elapsedRealtime();
                     mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
@@ -185,10 +190,12 @@ public class ReviewActivity extends Activity {
         TextView titleTextView = findViewById(R.id.tv_title);
         titleTextView.setText(unitName);
 
+        mRootViewGroup = findViewById(R.id.root);
         mVideoView = findViewById(R.id.video_view);
         mWordView = findViewById(R.id.word_view);
         mDoHomeworkButton = findViewById(R.id.btn_do_homework);
         mRecordingTextView = findViewById(R.id.tv_rec);
+        mRecordingViewGroup = findViewById(R.id.ly_rec);
         mWorkbookTextView = findViewById(R.id.tv_workbook);
         mWorkbookTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,13 +256,20 @@ public class ReviewActivity extends Activity {
                     if (mRecorderThread != null) {
                         long interval = SystemClock.elapsedRealtime() - mRecorderStartTime;
                         String intervalString = TimeUtils.formatNumberToHourMinuteSecond((double)(interval / 1000));
-                        mRecordingTextView.setText(ReviewActivity.this.getString(R.string.recording) + " " + intervalString);
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(interval);
+                        if (seconds % 2 == 0) {
+                            mRootViewGroup.setBackgroundColor(getResources().getColor(R.color.red));
+                        } else {
+                            mRootViewGroup.setBackgroundColor(getResources().getColor(R.color.white));
+                        }
+                        mRecordingTextView.setText(intervalString);
                         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_REC_TIME, 100);
                     }
                     break;
 
                 case MSG_STOP_RECORDING:
-                    mRecordingTextView.setVisibility(View.INVISIBLE);
+                    mRecordingViewGroup.setVisibility(View.INVISIBLE);
+                    mRootViewGroup.setBackgroundColor(getResources().getColor(R.color.white));
                     Toast.makeText(ReviewActivity.this, getString(R.string.add_workbook_prompt), Toast.LENGTH_SHORT).show();
                     break;
 
