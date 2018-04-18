@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.sun.amy.R;
 import com.sun.amy.adapter.UnitAdapter;
+import com.sun.amy.data.KidBean;
 import com.sun.amy.data.UnitBean;
 import com.sun.amy.data.UnitWrapper;
 import com.sun.amy.data.SongBean;
@@ -59,6 +62,8 @@ public class ReviewActivity extends Activity {
 
     private MediaRecorderThread mRecorderThread;
     private long mRecorderStartTime = 0l;
+
+    private String mKidName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +150,7 @@ public class ReviewActivity extends Activity {
                     dir.mkdir();
                 }
 
-                String fileName = "Amy_" + postfix + ".m4a";
+                String fileName = mKidName + postfix + ".m4a";
 
                 int count = 0;
                 File recFile;
@@ -153,7 +158,7 @@ public class ReviewActivity extends Activity {
                     recFile = new File(dir, fileName);
                     if (recFile.exists()) {
                         count += 1;
-                        fileName = "Amy_" + postfix + "(" + count + ").m4a";
+                        fileName = mKidName + postfix + "(" + count + ").m4a";
                     } else {
                         break;
                     }
@@ -209,6 +214,20 @@ public class ReviewActivity extends Activity {
     }
 
     private void initData(String unitDirectory) {
+        File amy = new File(Environment.getExternalStorageDirectory(), "amy");
+        if (amy != null && amy.exists()) {
+            File kid = new File(amy, "kid.ini");
+            if (kid != null && kid.exists()) {
+                KidBean bean = KidBean.parseConfig(kid.getAbsolutePath());
+                if (bean != null) {
+                    mKidName = bean.english_name;
+                    if (!TextUtils.isEmpty(mKidName)) {
+                        mKidName += "_";
+                    }
+                }
+            }
+        }
+
         List<UnitItemData> list = new ArrayList<>();
 
         mUnitBean = UnitBean.parseConfig(unitDirectory);

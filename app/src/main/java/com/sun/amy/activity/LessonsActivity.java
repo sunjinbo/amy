@@ -15,6 +15,7 @@ import com.sun.amy.data.LessonItemData;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -81,6 +82,7 @@ public class LessonsActivity extends Activity {
                 }
             }
         }
+        Collections.sort(list);
 
         mAdapter = new LessonsAdapter(this, list);
         mRecyclerView.setAdapter(mAdapter);
