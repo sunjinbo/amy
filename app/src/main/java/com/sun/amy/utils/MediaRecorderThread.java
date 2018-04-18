@@ -11,15 +11,16 @@ import java.io.IOException;
 public class MediaRecorderThread extends Thread {
 
     private MediaRecorder mMediaRecorder;
-    private boolean mIsRecording;
+    private boolean mIsRecording = false;
     private String mAudioFilePath;
 
     public boolean isRecording() {
-        return this.isAlive() && mIsRecording;
+        return this.isAlive() || mIsRecording;
     }
 
     public void startRecording(String filePath) {
         if (!isRecording()) {
+            mIsRecording = true;
             mAudioFilePath = filePath;
             start(); // start recording thread
         }
@@ -28,6 +29,8 @@ public class MediaRecorderThread extends Thread {
     public void stopRecording() {
         try {
             mMediaRecorder.stop();
+            mMediaRecorder.reset();
+            mMediaRecorder.release();
             mIsRecording = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,14 +45,17 @@ public class MediaRecorderThread extends Thread {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
             mMediaRecorder.setOutputFile(file.getAbsolutePath());
 
             mMediaRecorder.prepare();
+            mMediaRecorder.start();
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mMediaRecorder.start();
     }
 }

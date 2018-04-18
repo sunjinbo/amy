@@ -140,10 +140,6 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
                         contentValues);
 
                 Intent intent = new Intent();
-                ComponentName comp = new ComponentName(
-                        "com.tencent.mm",
-                        "com.tencent.mm.ui.tools.ShareToTimeLineUI");
-                intent.setComponent(comp);
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Intent.EXTRA_STREAM, uri);
