@@ -119,17 +119,28 @@
     <orderEntry type="jdk" jdkName="Android API 26 Platform (1)" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-solver:1.0.2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobGUI:2018.0419.1211@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:SDKWrapper:2018.0201.1609@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-idling-resource-2.2.2" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable-26.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: cn.sharesdk:OneKeyShare-3.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\MobCommons-2018.0418.1102.jar:unspecified@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: javax.annotation:javax.annotation-api:1.2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\MobTools-2018.0419.1211.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-3.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobCommons:2018.0418.1102@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-core-2.2.2" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-fragment-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:common:1.0.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup:javawriter:2.1.1@jar" level="project" />
+    <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-Wechat-Core:3.1.4@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:rules-0.5" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-media-compat-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:26.1.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\ShareSDK-Wechat-Core-3.1.4.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: cn.sharesdk:ShareSDK-Wechat:3.1.4@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\ShareSDK-Wechat-Favorite-3.1.4.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-compat-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.code.findbugs:jsr305:2.0.1@jar" level="project" />
@@ -142,10 +153,14 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:runner-0.5" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-utils-26.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.mob:MobTools:2018.0419.1211@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:exposed-instrumentation-api-publish-0.5" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\ShareSDK-Core-3.1.4.jar:unspecified@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-library:1.3@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-integration:1.3@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:recyclerview-v7-25.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\ShareSDK-Wechat-3.1.4.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:D.\git-github\Amy\amy\app\libs\ShareSDK-Wechat-Moments-3.1.4.jar:unspecified@jar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:runtime-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: android-android-26" level="project" />
   </component>
