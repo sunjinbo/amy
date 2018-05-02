@@ -44,6 +44,7 @@ public class EditPagePort extends EditPage  {
 
 	public void onCreate() {
 		super.onCreate();
+
 		int screenHeight = ResHelper.getScreenHeight(activity);
 		float ratio = ((float) screenHeight) / DESIGN_SCREEN_HEIGHT;
 

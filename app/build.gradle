@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 26
@@ -19,24 +18,6 @@ android {
     }
 }
 
-MobSDK {
-    appKey "256c39ae6eff8"
-    appSecret "f5d9fb8d8ec4180238fe1369a67a6a47"
-
-    ShareSDK {
-        //平台配置信息
-        devInfo {
-
-            Wechat {
-                appId "wx4868b35061f87885"
-                appSecret "64020361b8ec4c99936c0e3999a9f249"
-            }
-
-        }
-    }
-
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -46,4 +27,20 @@ dependencies {
     })
     compile 'com.android.support:recyclerview-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+
+    compile files('libs/MobCommons-2017.0801.1522.jar')
+    compile files('libs/MobTools-2017.0801.1522.jar')
+    compile files('libs/ShareSDK-Core-3.0.1.jar')
+    compile files('libs/ShareSDK-Email-3.0.1.jar')
+    compile files('libs/ShareSDK-Facebook-3.0.1.jar')
+    compile files('libs/ShareSDK-QQ-3.0.1.jar')
+    compile files('libs/ShareSDK-QZone-3.0.1.jar')
+    compile files('libs/ShareSDK-ShortMessage-3.0.1.jar')
+    compile files('libs/ShareSDK-SinaWeibo-3.0.1.jar')
+    compile files('libs/ShareSDK-TencentWeibo-3.0.1.jar')
+    compile files('libs/ShareSDK-Twitter-3.0.1.jar')
+    compile files('libs/ShareSDK-Wechat-3.0.1.jar')
+    compile files('libs/ShareSDK-Wechat-Core-3.0.1.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-3.0.1.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-3.0.1.jar')
 }

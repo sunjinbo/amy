@@ -7,10 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,6 +29,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -131,20 +136,7 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
         if (itemData != null) {
             File sharedFile = new File(itemData.path);
             if (sharedFile.exists()) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.TITLE, itemData.title);
-                contentValues.put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis());
-                contentValues.put(MediaStore.MediaColumns.DATA, itemData.path);
-
-                Uri uri = getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        contentValues);
-
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(Intent.EXTRA_STREAM, uri);
-                intent.setType("audio/*");
-                startActivity(Intent.createChooser(intent, getString(R.string.share)));
+                showShare(sharedFile);
             }
         }
     }
@@ -229,6 +221,34 @@ public class HomeworkActivity extends Activity implements RecordAdapter.SharedMo
     private int getCurrentProgress(float currentTime, float totalTime) {
         float totalProcess = 100;
         return  (int) ( currentTime / totalTime * totalProcess);
+    }
+
+    private void showShare(final File audio) {
+        final File logo = new File(Environment.getExternalStorageDirectory(), "logo.png");
+
+        cn.sharesdk.onekeyshare.OnekeyShare oks = new cn.sharesdk.onekeyshare.OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(audio.getName());
+
+        oks.setFilePath(audio.getAbsolutePath());
+        oks.setImagePath(logo.getAbsolutePath());
+
+        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+            @Override
+            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+                if (Wechat.NAME.equals(platform.getName()) ||
+                        WechatMoments.NAME.equals(platform.getName())) {
+                    paramsToShare.setShareType(Platform.SHARE_FILE);
+                    paramsToShare.setFilePath(audio.getAbsolutePath());
+                    paramsToShare.setImagePath(logo.getAbsolutePath());
+                }
+            }
+        });
+
+        // 启动分享GUI
+        oks.show(this);
     }
 
     private Handler mHandler = new Handler(new Handler.Callback() {

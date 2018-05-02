@@ -22,7 +22,7 @@ public class PlatformPagePort extends PlatformPage {
 	}
 
 	public void onCreate() {
-		requestSensorPortraitOrientation();
+		requestPortraitOrientation();
 		super.onCreate();
 	}
 

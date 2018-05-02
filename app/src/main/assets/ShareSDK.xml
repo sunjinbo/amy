@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DevInfor>
+<ShareSDK AppKey="256c39ae6eff8" AppSecret="f5d9fb8d8ec4180238fe1369a67a6a47"/>
 <SinaWeibo Enable="false" />
 <TencentWeibo Enable="false" />
 <Douban Enable="false" />
@@ -16,7 +17,7 @@
 <Tumblr Enable="false" />
 <Email Enable="false" />
 <ShortMessage Enable="false" />
-<Wechat AppId="wx4868b35061f87885" AppSecret="64020361b8ec4c99936c0e3999a9f249" />
+<Wechat AppId="wx29a78b19804da519" AppSecret="2c43c4e3401c323378de23fc8118511a" />
 <WechatMoments Enable="false" />
 <QQ Enable="false" />
 <Instapaper Enable="false" />
